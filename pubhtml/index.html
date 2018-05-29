@@ -22,18 +22,23 @@ longinput  { size: 50; }
 <h4 id="amount_text" > </h4>
 <h4 id="transec_id"></h4>
 <p id="demo"></p>
-<div>
-Sender Address : <input type="text" name="sendaddress" id="sendaddress" value="" style="width: 500px;" '>
-</div>
-<div>
-RX Address : <input type="text" name="address" id="address" value="" style="width: 500px;"  > 
-</div>
-<div>
-TX Amount : <input type="text" name="amount" id="amount" value="" sise="20" onkeypress='validate(event)'> 
-</div>
-<div>
-Sender Password : <input type="password" name="ULpass" id="ULpass" value="" sise="20" '> 
-</div>
+<table >
+<tr><td>
+Sender Address : </td><td> <input type="text" name="sendaddress" id="sendaddress" value="" style="width: 500px;" '>
+</td>
+</tr><tr><td>
+Receiver Address : </td><td> <input type="text" name="address" id="address" value="" style="width: 500px;"  > 
+</td>
+</tr>
+<tr> <td>
+TX Amount : 
+</td><td>
+ <input type="text" name="amount" id="amount" value="" sise="20" onkeypress='validate(event)'> 
+</td> </tr>
+<tr><td>
+Sender Password : </td><td> <input type="password" name="ULpass" id="ULpass" value="" sise="20" '> 
+</td> </tr>
+</table>
 <div>
 <button  onclick="contactServer()" > Enter  </button> </br>
 </div>
