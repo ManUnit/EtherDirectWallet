@@ -6,14 +6,14 @@ installing :
 
 git clone https://github.com/hs1gab/EtherDirectWallet
 
-npm install
+* run npm install
 
 Change config :
 
-vi config.json 
+* run vi config.json 
 
 and edit pubhtml/smt.html find "change IP RPC" then change to RPC server as you have
 
  running :
 
-npm start
+*run npm start
