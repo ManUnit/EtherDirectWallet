@@ -3,11 +3,15 @@
 "# AnandaWallet web Payment service" 
 
 installing :
-get clone https://github.com/hs1gab/AnandaWallet
+
+git clone https://github.com/hs1gab/AnandaWallet
+
 npm install
 
 Change config :
+
 vi config.json 
+
 and edit pubhtml/smt.html find <change IP RPC> then change to RPC server as you have
 
  running :
