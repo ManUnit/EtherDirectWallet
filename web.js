@@ -1,6 +1,6 @@
 //var Serv = require('./webservice')  // Request npm module
  var config = require('./config.json');
- var port = 2000 ;
+ var port = config.WEBPORT ;
  var express = require('express')  // Request npm module
  var Web3 = require('web3');  // request installed npm or yarn module
  var webserver = express() ;
