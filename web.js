@@ -67,16 +67,12 @@ var sender_pass = req.query.spadd  ;
  console.log ( "  CHECK Valid address : " + web3.utils.isAddress( rx_address  )  );
 
  if ( !web3.utils.isAddress( sender_address  ) ) {   // GATE if not pass this have to go back
-  // WEBres.send ( "Sender  Address invalid International Bank Account Nunmber (IBAN) checksum please check address again " ) ; 
-  ADD_CHK_RES = "your  Sender Address invalid International Bank Account Nunmber (IBAN) checksum please check address again" ; 
-  console.log ( "your  Sender Address invalid International Bank Account Nunmber (IBAN) checksum " ) ;
-  // return false ; 
- }
+     ADD_CHK_RES = "your  Sender Address invalid International Bank Account Nunmber (IBAN) checksum please check address again" ; 
+     console.log ( "your  Sender Address invalid International Bank Account Nunmber (IBAN) checksum " ) ;
+  }
  if ( !web3.utils.isAddress( rx_address  ) ) {   // GATE if not pass this have to go back
-  // WEBres.send ( "your  Receiver Address invalid International Bank Account Nunmber (IBAN) checksum please check address again " ) ; 
   ADD_CHK_RES = ADD_CHK_RES +  "<br>your  Receiver  Address invalid International Bank Account Nunmber (IBAN) checksum please check address again" ; 
   console.log ( "your  RX Address invalid International Bank Account Nunmber (IBAN) checksum " ) ;
-  // return false ; 
  }
  if ( ADD_CHK_RES != '' ) {
    WEBres.send ( ADD_CHK_RES  ) ;
@@ -85,10 +81,7 @@ var sender_pass = req.query.spadd  ;
 
  console.log('type of VALUE_ETH  ' + typeof VALUE_ETH  + " Address :" +  rx_address );
  console.log('Amount is : '+ tx_amonut + " Address :" +  rx_address );
-// console.log('TX WEI    : ' +  web3.utils.toWei(TX_WEI, "wei")  + " Address :" +  rx_address );
-// console.log('to WEI    : ' + web3.toWei( VALUE_ETH , "ether")  + " Address :" +  rx_address );
-      
-//        web3.personal.unlockAccount( TX_ac , TX_pass , 600)
+
 web3.eth.personal.unlockAccount( TX_ac , TX_pass , 200 , function ( unLockerror , Unlocked_resp ) {  
 	      if (unLockerror) {  
                   console.log(" Unlock has error is :  " + unLockerror ) ;
@@ -118,7 +111,7 @@ web3.eth.personal.unlockAccount( TX_ac , TX_pass , 200 , function ( unLockerror 
 
                       // END Send // 
 
-//                  WEBres.send( "Status unlocked accoung is : " + Unlocked_resp ) 
+
 	      }
   });  // web3 unlock
 
