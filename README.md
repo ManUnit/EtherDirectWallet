@@ -4,7 +4,7 @@
 
 installing :
 
-git clone https://github.com/hs1gab/AnandaWallet
+git clone https://github.com/hs1gab/EtherDirectWallet
 
 npm install
 
