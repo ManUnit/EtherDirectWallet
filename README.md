@@ -16,4 +16,4 @@ and edit pubhtml/smt.html find "change IP RPC" then change to RPC server as you 
 
  running :
 
-*run npm start
+* run npm start
