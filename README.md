@@ -1,4 +1,5 @@
-(https://imgur.com/mRWwkSU.png)
+# Ananda Direct Ethereum wallet for private network
+![Ananda Screenshot](https://imgur.com/mRWwkSU.png)
 "# AnandaWallet web Payment service" 
 
 installing :
@@ -7,5 +8,8 @@ npm install
 
 Change config :
 vi config.json 
+and edit pubhtml/smt.html find <change IP RPC> then change to RPC server as you have
+
+ running :
 
 npm start
