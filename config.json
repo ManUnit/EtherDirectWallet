@@ -4,6 +4,10 @@
   "RPCSVR": "<RPC IP>",
   "RPCPORT": "8545",
   "WEBPORT" : "4000" ,
+  "ExpolrerSvr" : {
+          "ip" : "<Explorer IP>" ,
+          "port" : "3000"
+  },
   "mongoDB" : { "user" : "admin" , 
                   "password" : "<password>" 
                 }

@@ -84,7 +84,8 @@ var sender_pass = req.query.spadd  ;
 web3.eth.personal.unlockAccount( TX_ac , TX_pass , 200 , function ( unLockerror , Unlocked_resp ) {  
 	      if (unLockerror) {  
                   console.log(" Unlock has error is :  " + unLockerror ) ;
-                  WEBres.send(" Unlocl Error is : " + unLockerror + " Please send again " ) ;
+                  WEBres.send(" Unlock Error is : " + unLockerror + " Please send again " ) ;
+                  web3.eth.personal.lockAccount( TX_ac ) ;
               } else {
                   // Handle after Unlock 
                   console.log("  " + Unlocked_resp ) 
@@ -102,7 +103,9 @@ web3.eth.personal.unlockAccount( TX_ac , TX_pass , 200 , function ( unLockerror 
                              web3.eth.personal.lockAccount( TX_ac ) ;
 				    } else {
                              web3.eth.personal.lockAccount( TX_ac ) ; 
-                             WEBres.send( "Transaction " + " TxID : " + transactionHash ) 
+                             WEBres.send( "Transaction " + " TxID : <a href=http://"+ 
+                                config.ExpolrerSvr.ip+":"+ config.ExpolrerSvr.port +"/tx/" + 
+                                 transactionHash + ">" + transactionHash + "</a>"  )  ;
           		     console.log("Transection ID:" + transactionHash);
           		     console.log("Locked A/C :" + TX_ac );
 			    }
