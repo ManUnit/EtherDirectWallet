@@ -3,6 +3,7 @@
   "Revision" : "1" ,
   "RPCSVR": "<RPC IP>",
   "RPCPORT": "8545",
+  "WEBPORT" : "4000" ,
   "mongoDB" : { "user" : "admin" , 
                   "password" : "<password>" 
                 }
