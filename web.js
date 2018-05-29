@@ -9,7 +9,6 @@
  var sleep = require('sleep');
  webserver.use( bodyParser.urlencoded({extended: true}) ) ;
 
-console.log( "use Main AC: " + config.MainAc ) 
 var mongoose = require('mongoose') ;
 var DBuser = config.mongoDB.user  ;
 var DBpassword = config.mongoDB.password 
@@ -19,7 +18,7 @@ var options = { server: { socketOptions: { keepAlive: 1 } } };
 console.log("Use RPC server]:" + config.RPCSVR + ":" + config.RPCPORT ) ;
 console.log("open web  http://[ip-web-server]:" + port) ;
 console.log("CTRL+C to Exit") ;
-// console.log(Web3.providers) ;
+
 web3.eth.getAccounts(function(err, res){
     console.log(err, res) 
  }
