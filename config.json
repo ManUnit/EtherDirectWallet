@@ -1,0 +1,7 @@
+{
+  "RPCSVR": "<RPC IP>",
+  "RPCPORT": "8545",
+  "mongoDB" : { "user" : "admin" , 
+                  "password" : "<password>" 
+                }
+}

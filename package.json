@@ -1,0 +1,37 @@
+{
+  "name": "blockchain_esaential",
+  "version": "1.0.0",
+  "main": "app.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node web.js",
+    "test": "node webtest.js",
+    "mine": "node mine.js",
+    "mongo": "node mongo.js",
+    "mongoose": "node server.js",
+    "massage": "echo Hello ANT"
+  },
+  "dependencies": {
+    "big-integer": "^1.6.26",
+    "body-parser": "^1.18.2",
+    "connect-redis": "^3.3.3",
+    "cookie-session": "^2.0.0-beta.3",
+    "express": "^4.16.2",
+    "express-session": "^1.15.6",
+    "express-validator": "^5.0.2",
+    "fs-promise": "^2.0.3",
+    "glob": "^7.1.2",
+    "jade": "^1.11.0",
+    "mongodb": "^3.0.3",
+    "mongodb-autoincrement": "^1.0.1",
+    "mongoose": "^5.0.7",
+    "sha3": "^1.2.2",
+    "sleep": "5.1.1",
+    "swarm-js": "^0.1.37",
+    "tar": "^4.4.0",
+    "tar.gz": "^1.0.7",
+    "web3": "^1.0.0-beta.34"
+  },
+  "author": "Anan P.",
+  "description": ""
+}
