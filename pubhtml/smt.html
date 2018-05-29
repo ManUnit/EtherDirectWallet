@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>2Fellows Token Balance Explorer</title>
+
+	<script src="https://cdn.jsdelivr.net/npm/web3@0.20.1/dist/web3.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+</head>
+<body>
+<table>
+<tr>
+<td> <a href="/" > Home </a>  </td><td>  <a href="/tokens" > Token Explorer </a> </td>
+</tr>
+</table>
+
+	<h1>2Fellows  Token Balance Explorer</h1>
+	<form id="tokenForm">
+		<div>
+			<label for="contractAddress">
+				<b>Token Contract Address:</b>
+			</label>
+			<input id="contractAddress" type="text" value="0x88ba96d958544281dd3d2d4bf2e3ec8b85a42653" size="60" />
+		</div>
+		<br />
+		<div>
+			<label for="accountAddress">
+				<b>Token Holder Address:</b>
+			</label>
+			<input id="accountAddress" type="text" value="0x123..." size="60" />
+		</div>
+		<br />
+		<input type="submit" value="Get Token Info" />
+	</form>
+	<br />
+	<div id="results"></div>
+	<script>
+	
+		// create a web3 object connected to our NodETH node
+		
+		var web3 = new Web3(new Web3.providers.HttpProvider("http://202.151.178.9:8545"));
+		// define the ERC20 standard token ABI to interact with token contracts using
+		var erc20Abi = [{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"type":"function"}];
+		$('#tokenForm').submit(function (event) {
+			// preventDefault on the submit event to prevent form from carrying out its default action
+			
+			event.preventDefault();
+			// set our results div to show a loading status
+			$('#results').html('loading...');
+			// create a web3 contract object with the ERC20 abi
+			var tokenAddress = $('#contractAddress').val();
+			var token = web3.eth.contract(erc20Abi).at(tokenAddress);
+			// fetch data from the blockchain
+			// 1. get the total supply
+			token.totalSupply.call(function (err, totalSupply) {
+					
+				// 2. get the number of decimal places used to represent this token
+				token.decimals.call(function (err, decimals) {
+					// 3. get the name of the token
+					token.name.call(function (err, name) {
+						// 3. get the balance of the account holder
+						var accountAddress = $('#accountAddress').val();
+						token.balanceOf.call(accountAddress, function (err, balance) {
+							// update the UI to reflect the data returned from the blockchain
+							var percentOwned = balance.div(totalSupply).mul(100);
+							var divisor = new web3.BigNumber(10).toPower(decimals);
+							totalSupply = totalSupply.div(divisor);
+							balance = balance.div(divisor);
+							var results = '<b>Token:</b> ' + name + '<br />';
+							results += '<b>Total supply:</b> ' + totalSupply.round(5) + '<br /><br />';
+							results += accountAddress + ' owns ' + balance.round(5) + ' which is ' + percentOwned.round(5) + '% of the total supply';
+							$('#results').html(results);
+						});
+					});
+				});
+			});
+		});
+	</script>
+</body>
+</html>
