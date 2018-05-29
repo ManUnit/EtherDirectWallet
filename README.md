@@ -12,7 +12,7 @@ Change config :
 
 vi config.json 
 
-and edit pubhtml/smt.html find <change IP RPC> then change to RPC server as you have
+and edit pubhtml/smt.html find "change IP RPC" then change to RPC server as you have
 
  running :
 
