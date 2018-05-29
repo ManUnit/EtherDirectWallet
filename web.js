@@ -16,8 +16,6 @@ var options = { server: { socketOptions: { keepAlive: 1 } } };
 
 
 console.log("Use RPC server]:" + config.RPCSVR + ":" + config.RPCPORT ) ;
-console.log("open web  http://[ip-web-server]:" + port) ;
-console.log("CTRL+C to Exit") ;
 
 web3.eth.getAccounts(function(err, res){
     console.log(err, res) 
@@ -157,4 +155,6 @@ web3.eth.personal.unlockAccount( TX_ac , TX_pass , 200 , function ( unLockerror 
 //};
 
 
-    webserver.listen(port) ;
+var Server_val =  webserver.listen(port) ;
+console.log("open web  http://"+ Server_val.address().address + ":" + port) ;
+console.log("CTRL+C to Exit") ;
