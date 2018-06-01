@@ -22,6 +22,7 @@
     "fs-promise": "^2.0.3",
     "glob": "^7.1.2",
     "jade": "^1.11.0",
+    "keythereum": "^1.0.4",
     "mongodb": "^3.0.3",
     "mongodb-autoincrement": "^1.0.1",
     "mongoose": "^5.0.7",
