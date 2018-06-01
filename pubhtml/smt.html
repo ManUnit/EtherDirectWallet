@@ -9,7 +9,7 @@
 <body>
 <table>
 <tr>
-<td> <a href="/" > Home </a>  </td><td>  <a href="/tokens" > Token Explorer </a> </td>
+<td> <a href="/" > Home </a>  </td><td>  <a href="/tokens" > Token Explorer </a> </td>  <td>  <a href="http://202.151.178.21:3000" > Blockchain Explorer </a> </td>
 </tr>
 </table>
 
@@ -37,42 +37,80 @@
 	
 		// create a web3 object connected to our NodETH node
 		
-		var web3 = new Web3(new Web3.providers.HttpProvider("http://<change IP RPC>:8545"));
+		var web3 = new Web3(new Web3.providers.HttpProvider("http://201.151.178.9>:8545"));
 		// define the ERC20 standard token ABI to interact with token contracts using
-		var erc20Abi = [{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"type":"function"}];
-		$('#tokenForm').submit(function (event) {
-			// preventDefault on the submit event to prevent form from carrying out its default action
-			
-			event.preventDefault();
-			// set our results div to show a loading status
-			$('#results').html('loading...');
-			// create a web3 contract object with the ERC20 abi
-			var tokenAddress = $('#contractAddress').val();
-			var token = web3.eth.contract(erc20Abi).at(tokenAddress);
-			// fetch data from the blockchain
-			// 1. get the total supply
-			token.totalSupply.call(function (err, totalSupply) {
-					
-				// 2. get the number of decimal places used to represent this token
-				token.decimals.call(function (err, decimals) {
-					// 3. get the name of the token
-					token.name.call(function (err, name) {
-						// 3. get the balance of the account holder
-						var accountAddress = $('#accountAddress').val();
-						token.balanceOf.call(accountAddress, function (err, balance) {
-							// update the UI to reflect the data returned from the blockchain
-							var percentOwned = balance.div(totalSupply).mul(100);
-							var divisor = new web3.BigNumber(10).toPower(decimals);
-							totalSupply = totalSupply.div(divisor);
-							balance = balance.div(divisor);
-							var results = '<b>Token:</b> ' + name + '<br />';
-							results += '<b>Total supply:</b> ' + totalSupply.round(5) + '<br /><br />';
-							results += accountAddress + ' owns ' + balance.round(5) + ' which is ' + percentOwned.round(5) + '% of the total supply';
-							$('#results').html(results);
-						});
+		var erc20Abi = [{"constant":true,
+                                  "inputs":[],
+                                  "name":"name",
+                                  "outputs":[{
+                                     "name":"",
+                                     "type":"string"
+                                  }],
+                                  "payable":false,
+                                  "type":"function"
+                                }, {
+                                    "constant":true,
+                                    "inputs":[],
+                                    "name":"totalSupply",
+                                    "outputs":[{"name":"","type":"uint256"}],
+                                    "payable":false,
+                                    "type":"function"
+                                    },{
+                                      "constant":true,
+                                      "inputs":[],
+                                      "name":"decimals",
+                                      "outputs":[{
+                                        "name":"",
+                                        "type":"uint8"
+                                       }],
+                                      "payable":false,
+                                      "type":"function"
+                                      },{
+                                         "constant":true,
+                                         "inputs":[{
+                                              "name":"_owner",
+                                              "type":"address"
+                                          }],
+                                         "name":"balanceOf",
+                                         "outputs":[{
+                                            "name":"balance",
+                                            "type":"uint256"
+                                          }],
+                                           "payable":false,
+                                           "type":"function"
+                                 }];
+
+		$('#tokenForm').submit(function (event) { // preventDefault on the submit event to prevent form from carrying out its default action
+	     	event.preventDefault();
+		// set our results div to show a loading status
+		$('#results').html('loading...');
+		// create a web3 contract object with the ERC20 abi
+		var tokenAddress = $('#contractAddress').val();
+		var token = web3.eth.contract(erc20Abi).at(tokenAddress);
+		// fetch data from the blockchain
+		// 1. get the total supply
+		token.totalSupply.call(function (err, totalSupply) {
+				
+			// 2. get the number of decimal places used to represent this token
+			token.decimals.call(function (err, decimals) {
+				// 3. get the name of the token
+				token.name.call(function (err, name) {
+					// 3. get the balance of the account holder
+					var accountAddress = $('#accountAddress').val();
+					token.balanceOf.call(accountAddress, function (err, balance) {
+						// update the UI to reflect the data returned from the blockchain
+						var percentOwned = balance.div(totalSupply).mul(100);
+						var divisor = new web3.BigNumber(10).toPower(decimals);
+						totalSupply = totalSupply.div(divisor);
+						balance = balance.div(divisor);
+						var results = '<b>Token:</b> ' + name + '<br />';
+						results += '<b>Total supply:</b> ' + totalSupply.round(5) + '<br /><br />';
+						results += accountAddress + ' owns ' + balance.round(5) + ' which is ' + percentOwned.round(5) + '% of the total supply';
+						$('#results').html(results);
 					});
 				});
 			});
+		});
 		});
 	</script>
 </body>
