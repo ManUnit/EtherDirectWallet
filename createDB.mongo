@@ -1,0 +1,43 @@
+
+
+use admin
+db.createUser( { user: "root",
+          pwd: "<password>",
+          roles: [ "userAdminAnyDatabase",
+                   "dbAdminAnyDatabase",
+                   "readWriteAnyDatabase"
+
+] } )
+
+use accounts
+db.users.createIndex( { 
+                                      userlogin : 1,
+                                      IDPassCard : 1 ,
+                                      firstname: 1, 
+                                      lastname: 1 }, { unique: true } )
+
+
+
+db.createRole(
+   {
+     role: "nodeAccess",
+     privileges: [
+       { resource: { db: "accounts", collection: "" }, actions: [ "find", "update", "insert", "remove" ] }
+     ],
+     roles: [
+       { role: "read", db: "admin" }
+     ]
+   },
+   { w: "majority" , wtimeout: 5000 }
+);
+
+
+
+db.createUser(
+  {
+    user: "nodejs",
+    pwd: "<password>",
+    roles : [{"role":"nodeAccess","db":"accounts"}]
+  }
+ )
+
