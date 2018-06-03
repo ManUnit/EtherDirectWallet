@@ -15,11 +15,12 @@ db.users.createIndex( {
                                       IDPassCard : 1 ,
                                       firstname: 1, 
                                       lastname: 1 }, { unique: true } )
+use accounts 
+db.users.createIndex( { IDcardpass : 1},{ unique: true } )
 db.users.createIndex( { userlogin : 1},{ unique: true } )
-db.users.createIndex( { IDPassCard : 1},{ unique: true } )
 db.users.createIndex( { email : 1},{ unique: true } )
 db.users.createIndex( { firstname: 1, lastname: 1  },{ unique: true } )
-
+db.users.insert( { IDcardpass : "3101401348851" , userlogin : "anan" , email : "hs1gab@gmail.com" , firstname : "Richard" , lastname = "wer"  } ) 
 
 
 db.createRole(
