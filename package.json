@@ -12,7 +12,7 @@
     "massage": "echo Hello ANT"
   },
   "dependencies": {
-    "big-integer": "^1.6.26",
+    "big-integer": "^1.6.30",
     "body-parser": "^1.18.2",
     "connect-redis": "^3.3.3",
     "cookie-session": "^2.0.0-beta.3",
@@ -25,16 +25,17 @@
     "glob": "^7.1.2",
     "jade": "^1.11.0",
     "keythereum": "^1.0.4",
-    "mongodb": "^3.0.3",
+    "mongodb": "^3.0.10",
     "mongodb-autoincrement": "^1.0.1",
     "mongoose": "^5.0.7",
+    "npm": "^6.1.0",
     "promise": "^8.0.1",
     "sha3": "^1.2.2",
     "sleep": "5.1.1",
     "swarm-js": "^0.1.37",
     "tar": "^4.4.0",
     "tar.gz": "^1.0.7",
-    "web3": "^1.0.0-beta.34"
+    "web3": "^1.0.0-beta.26"
   },
   "author": "Anan P.",
   "description": ""
