@@ -9,7 +9,7 @@
 <body>
 <table>
 <tr>
-<td> <a href="/" > Home </a>  </td><td>  <a href="/tokens" > Token Explorer </a> </td>  <td>  <a href="http://202.151.178.21:3000" > Blockchain Explorer </a> </td>
+<td> <a href="/" > Home </a>  </td><td> <a href="/account" >Account </a> </td> <td>   Token Explorer </td>  <td>  <a href="http://202.151.178.21:3000" > Blockchain Explorer </a> </td>
 </tr>
 </table>
 
@@ -19,7 +19,7 @@
 			<label for="contractAddress">
 				<b>Token Contract Address:</b>
 			</label>
-			<input id="contractAddress" type="text" value="0x88ba96d958544281dd3d2d4bf2e3ec8b85a42653" size="60" />
+			<input id="contractAddress" type="text" value="0xf1d28bac210b14b75e6ce1d529a1221c17579bfe" size="60" />
 		</div>
 		<br />
 		<div>
@@ -37,7 +37,7 @@
 	
 		// create a web3 object connected to our NodETH node
 		
-		var web3 = new Web3(new Web3.providers.HttpProvider("http://201.151.178.9>:8545"));
+		var web3 = new Web3(new Web3.providers.HttpProvider("http://201.151.178.21>:8545"));
 		// define the ERC20 standard token ABI to interact with token contracts using
 		var erc20Abi = [{"constant":true,
                                   "inputs":[],
