@@ -61,9 +61,9 @@ console.log("Use RPC server]:" + config.RPCSVR + ":" + config.RPCPORT ) ;
     var user  = req.query.userlogin.trim() ; 
     var upass = req.query.therest  ;
 
-    console.log( "IN WEB2 " + outDetail ) ;
     DBresp.data.finduser(user, function (err, data) {
-        //var outDetail =   DBresp.data.finduser(user) ;
+    //     console.log( "IN WEB2 " + err + "Data " + data ) ;
+    //var outDetail =   DBresp.data.finduser(user) ;
         WEBres.send( user + "======>" + data ) ;
     });
 
