@@ -11,7 +11,6 @@ obj.finduser =  function ( quser,callback ){
             callback(err,null);
         };
         var dbo = db.db("accounts");
-        return txt ;
         var query = { userlogin : quser  };
         let respdb ;
         dbo.collection("users").find(query).toArray(function(err, result ) {
@@ -27,7 +26,7 @@ obj.finduser =  function ( quser,callback ){
             txt += "</table>" ;
             db.close();
             console.log( "new value txt>>>" + txt ) ;
-            callback(null,txt);
+            callback(null,txt); // Return
         });
 
     }); //END MongoClient.connect
