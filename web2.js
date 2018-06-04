@@ -7,11 +7,11 @@
 var config = require('./config.json');
 var port = config.WEBPORT ;
 var express = require('express')  // Request npm module
-//var Web3 = require('web3');  // request installed npm or yarn module
+var Web3 = require('web3');  // request installed npm or yarn module
 var webserver = express() ;
 var bodyParser = require('body-parser') ;  // Get Post data
-//var web3 =  new Web3("http://" + config.RPCSVR + ":" + config.RPCPORT ) ;
-//var sleep = require('sleep');
+var web3 =  new Web3("http://" + config.RPCSVR + ":" + config.RPCPORT ) ;
+var sleep = require('sleep');
 webserver.use( bodyParser.urlencoded({extended: true}) ) ;
 // Database config 
 var DBresp = require('./mongDB') ; // load function under mongDB.js
@@ -21,10 +21,10 @@ var options = { server: { socketOptions: { keepAlive: 1 } } };
 
 console.log("Use RPC server]:" + config.RPCSVR + ":" + config.RPCPORT ) ;
 
-// web3.eth.getAccounts(function(err, res){
-//     console.log(err, res)
-//  }
-// )
+ web3.eth.getAccounts(function(err, res){
+     console.log(err, res)
+  }
+ )
    webserver.get('/',(req, res) => {
      res.sendFile(__dirname + '/pubhtml/index.html');
      // console.log(__dirname);
@@ -60,14 +60,15 @@ console.log("Use RPC server]:" + config.RPCSVR + ":" + config.RPCPORT ) ;
    // GET Data after 
     var user  = req.query.userlogin.trim() ; 
     var upass = req.query.therest  ;
+    DBresp.data.chkpass(user, function (err, data) {
+       console.log( "Chk Password " + data ) ;
+    }) ;
 
     DBresp.data.finduser(user, function (err, data) {
     //     console.log( "IN WEB2 " + err + "Data " + data ) ;
     //var outDetail =   DBresp.data.finduser(user) ;
-        WEBres.send( user + "======>" + data ) ;
+        WEBres.send(  data ) ;
     });
-
-
 
 }) // END 
 
@@ -84,14 +85,14 @@ var VALUE_ETH = tx_amonut;
 
  //console.log ( "  CHECK Valid address : " + web3.utils.isAddress( rx_address  )  );
 
- // if ( !web3.utils.isAddress( sender_address  ) ) {   // GATE if not pass this have to go back
- //     ADD_CHK_RES = "your  Sender Address invalid International Bank Account Nunmber (IBAN) checksum please check address again" ;
- //     console.log ( "your  Sender Address invalid International Bank Account Nunmber (IBAN) checksum " ) ;
- //  }
- // if ( !web3.utils.isAddress( rx_address  ) ) {   // GATE if not pass this have to go back
- //  ADD_CHK_RES = ADD_CHK_RES +  "<br>your  Receiver  Address invalid International Bank Account Nunmber (IBAN) checksum please check address again" ;
- //  console.log ( "your  RX Address invalid International Bank Account Nunmber (IBAN) checksum " ) ;
- // }
+  if ( !web3.utils.isAddress( sender_address  ) ) {   // GATE if not pass this have to go back
+      ADD_CHK_RES = "Sender Address invalid International Bank Account Nunmber (IBAN) checksum please check address again" ;
+      console.log ( "Sender Address invalid International Bank Account Nunmber (IBAN) checksum " ) ;
+   }
+  if ( !web3.utils.isAddress( rx_address  ) ) {   // GATE if not pass this have to go back
+   ADD_CHK_RES = ADD_CHK_RES +  "<br>Receiver Address invalid International Bank Account Nunmber (IBAN) checksum please check address again" ;
+   console.log ( " RX Address invalid International Bank Account Nunmber (IBAN) checksum " ) ;
+  }
  if ( ADD_CHK_RES != '' ) {
    WEBres.send ( ADD_CHK_RES  ) ;
    return false ; 
