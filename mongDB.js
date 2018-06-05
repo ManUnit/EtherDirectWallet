@@ -4,7 +4,7 @@ var url = "mongodb://" + config.mongoDB.user + ":" + config.mongoDB.password + "
 
 var obj = {} ;
 obj.finduser =  function ( quser,callback ){
-    var txt = "old value" ;
+    var txt = "" ;
     MongoClient.connect(url, function(err, db) {
         var x = "" ;
         if (err){
@@ -14,8 +14,13 @@ obj.finduser =  function ( quser,callback ){
         var query = { userlogin : quser  };
         let respdb ;
         dbo.collection("users").find(query).toArray(function(err, result ) {
-            //if (err) throw err;
-            txt = "<table>" ;
+            if (err) throw err;
+            txt += "<table border=#1 >" ;
+                txt += "<tr><td>IDCard Number" +
+                    "</td><td>Userlogin" + 
+                    "</td><td>FirstName" + 
+                    "</td><td>Lastname" + 
+                    "</td><td> Email </td></tr>\n";
             for (x in result ) {
                 txt += "<tr><td>" + result[x].IDcardpass +
                     "</td><td>" + result[x].userlogin +
@@ -25,13 +30,79 @@ obj.finduser =  function ( quser,callback ){
             }
             txt += "</table>" ;
             db.close();
-            console.log( "new value txt>>>" + txt ) ;
             callback(null,txt); // Return
-        });
+        });  // END dbo
+    }); //END MongoClient.connect
+} // END finduser 
+
+obj.chkpass =  function ( chkUser,callback )  {
+    MongoClient.connect(url, function(err, db) {
+        var x,txt = "" ;
+        if (err){
+            console.log ( " Cilent error " ) ;
+            callback(err,null);
+        };
+	    if ( db != null ){
+		var dbo = db.db("accounts");
+		var query = { userlogin : chkUser  };
+		let respdb ;
+		try {
+		dbo.collection("users").find(query).toArray(function(err, result ) {
+		    if ( result=='' ){
+		       callback(null,{ answer : { 
+						"password" : null  ,
+						"stat" : "found"   ,
+						"error" :  null  
+					     }
+				 }
+			    ); 
+		       db.close() ;
+		       return false ;   //  Must be here
+		    }
+		    if (err) {
+		    console.log( "password error " + err ) ; 
+		    callback( "Error" ,{ answer : { 
+						"password" : null   ,
+						"stat" : "error"  ,
+						"error" : err  
+					     } 
+				       } 
+			    ); 
+		    db.close() ;
+		    return false ;   //  Must be here
+		    }
+		    if ( !result==''   ) {
+		    //console.log( "password test [0] " +result[0].password); 
+		    //console.log( "password ---> right : " +result ) ; 
+		    callback(null,{ answer : { 
+					        "password" : result[0].password  ,
+						"stat" : "found"   ,
+						"error" :  null  
+					     }
+				 }
+			    ); 
+		    } //  End if err
+		    db.close();
+		    
+		});  // END dbo
+		}  /* end try */ 
+		  catch(e){
+		    callback( "Catch Error" ,{ answer : { 
+						"password" : null   ,
+						"stat" : "error"  ,
+						"error" : e  
+					     } 
+				       } 
+			    ); 
+		   console.log ( "Error catch \n" ) ;
+		   return false ;   //  Must be here
+
+		} /* End catch */ 
+        } ; 
 
     }); //END MongoClient.connect
+}; // END chkpass
 
-} // END finduser 
 obj.updateuser = function ( uUser ) {
   return " Update user :" + uUser ;
 };

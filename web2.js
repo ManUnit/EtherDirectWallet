@@ -60,17 +60,23 @@ console.log("Use RPC server]:" + config.RPCSVR + ":" + config.RPCPORT ) ;
    // GET Data after 
     var user  = req.query.userlogin.trim() ; 
     var upass = req.query.therest  ;
+    var logedstat = "fail"  ;
     DBresp.data.chkpass(user, function (err, data) {
-       console.log( "Chk Password " + data ) ;
-    }) ;
+       // console.log ( "data==" + data.answer.password + " " +  data.answer.stat + "  " + data.answer.error ) ;  
+       if( upass==data.answer.password & data.answer.stat == "found" & data.answer.error == null  ){
+        //    console.log( "Chk Password ok " + data + "\n" ) ;
+            logedstat = "SusceddFulled"  ;
+	    DBresp.data.finduser(user, function (err, data) {
+               WEBres.send(  data ) ;
+    }       );
 
-    DBresp.data.finduser(user, function (err, data) {
-    //     console.log( "IN WEB2 " + err + "Data " + data ) ;
-    //var outDetail =   DBresp.data.finduser(user) ;
-        WEBres.send(  data ) ;
+       }else {
+         //  console.log( "web2 Chk Password NOT OK :"  ) ;
+          WEBres.send(  "Login Failed " ) ;
+       }
     });
 
-}) // END 
+  }) // END 
 
 webserver.get('/dextransfer',(req, WEBres) => {
 var tx_amonut  = req.query.amount ; 
