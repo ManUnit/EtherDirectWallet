@@ -10,7 +10,7 @@ git clone https://github.com/hs1gab/EtherDirectWallet
 
 Change config :
 
-* run vi config.json 
+* run edit file  etc/config.json 
 
 and edit pubhtml/smt.html find "change IP RPC" then change to RPC server as you have
 
