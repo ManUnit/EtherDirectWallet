@@ -16,7 +16,7 @@ db.users.createIndex( { userlogin : 1},{ unique: true } )
 db.users.createIndex( { email : 1},{ unique: true } )
 db.users.insert( { IDcardpass : "3101401348851" , userlogin : "anan" , email : "anan@exsample.com" , firstname : "Richard" , lastname = "Wer"  } ) 
 
-
+use accounts 
 db.createRole(
    {
      role: "nodeAccess",
@@ -24,7 +24,7 @@ db.createRole(
        { resource: { db: "accounts", collection: "" }, actions: [ "find", "update", "insert", "remove" ] }
      ],
      roles: [
-       { role: "read", db: "admin" }
+       { role: "read", db: "accounts" }
      ]
    },
    { w: "majority" , wtimeout: 5000 }
@@ -32,6 +32,7 @@ db.createRole(
 
 
 
+use admin
 db.createUser(
   {
     user: "nodejs",
