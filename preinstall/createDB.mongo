@@ -39,4 +39,16 @@ db.createUser(
     roles : [{"role":"nodeAccess","db":"accounts"}]
   }
  )
+ 
+ 
+mongod.exe --dbpath=path --auth
+
+edit  mongod.cfg:
+
+dbpath=D:\Program Files\MongoDB 2.6 Standard\data
+
+security:
+authorization: enabled 
+
+// Restart service 
 
