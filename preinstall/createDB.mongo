@@ -14,7 +14,6 @@ db.users.createIndex( { firstname: 1, lastname: 1  },{ unique: true } )
 db.users.createIndex( { IDcardpass : 1},{ unique: true } )
 db.users.createIndex( { userlogin : 1},{ unique: true } )
 db.users.createIndex( { email : 1},{ unique: true } )
-db.users.insert( { IDcardpass : "3101401348851" , userlogin : "anan" , email : "anan@exsample.com" , firstname : "Richard" , lastname = "Wer"  } ) 
 
 use accounts 
 db.createRole(
@@ -41,6 +40,10 @@ db.createUser(
   }
  )
  
+ use accounts 
+ db.users.insert( { IDcardpass : "3101401348851" , userlogin : "anan" , email : "anan@exsample.com" , firstname : "Richard" , lastname : "Wer"  } ) 
+
+ 
  
 mongod.exe --dbpath=path --auth
 
@@ -52,4 +55,6 @@ security:
 authorization: enabled 
 
 // Restart service 
+remote client :
+mongo  -u <user> -p<password>  --authenticationDatabase admin accounts
 
