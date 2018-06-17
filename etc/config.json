@@ -1,14 +1,14 @@
 {  
-  "Version" : "1.0.0M" ,
-  "Revision" : "1" ,
-  "RPCSVR": "<RPC ip>",
+  "Version" : "1.0.1M" ,
+  "Revision" : "19" ,
+  "RPCSVR": "<RPC IP>",
   "RPCPORT": "8545",
   "WEBPORT" : "4000" ,
   "ExpolrerSvr" : {
-          "ip" : "<Explorer IP>" ,
+          "ip" : "<BLOCKS EXPLORER IP>" ,
           "port" : "3000"
   },
   "mongoDB" : { "user" : "nodejs" , 
-                 "password" : "<pass>" 
+                 "password" : "<PASSWORD>" 
                 }
 }

@@ -59,4 +59,158 @@ mongo  -u <user> -p<password>  --authenticationDatabase admin accounts
 use accounts 
  db.users.insert( { IDcardpass : "3101401348851" , userlogin : "anan" , email : "anan@exsample.com" , firstname : "Richard" , lastname : "Wer"  } ) 
 
+use webserv
+db.sessions.createIndex( { accountId: 1, sessionId: 1  },{ unique: true } )
+db.createRole(
+   {
+     role: "nodeAccess",
+     privileges: [
+       { resource: { db: "webserv", collection: "" }, actions: [ "find", "update", "insert", "remove" ] }
+     ],
+     roles: [
+       { role: "read", db: "webserv" }
+     ]
+   },
+   { w: "majority" , wtimeout: 5000 }
+);
 
+use admin
+db.grantRolesToUser( "nodejs", [ { role: "nodeAccess" , db:  "webserv" } ]  )
+
+db.sessions.insert( {  "ipaddr": "1.1.1.1" ,sessionId : "msje74jd73kdk8hg63seef" , "accountId"  : "23sd34495893" , unixtime : "275236357136455" , cryptkey : "derdsdswdufheyg"  } ) 
+
+
+# Create User registor database
+
+use accounts
+db.registor.createIndex( { userlogin : 1},{ unique: true } )
+db.registor.createIndex( { email : 1},{ unique: true } )
+db.registor.insert( {  "firstname"  : "Anan" , lastname : "Paenthonkham" , email : "hs1gab@gmail.com" , password : "12345"  } ) 
+db.registor.update ( { userlogin : "ant" }, { $set : { firstname: "hs1gab@gmail.com", lastname: "Paenthongkham" }  }   )
+db.registor.remove( {  userlogin : {$ne:   "anan"   } } )   
+use accounts
+db.counters.insert(
+   {
+      _idCounter: "userid",
+      seq: 0
+   }
+)
+
+# create asset 
+use asset
+db.createRole(
+   {
+     role: "nodeAccess",
+     privileges: [
+       { resource: { db: "asset", collection: "asset" }, actions: [ "find",  "insert"  ] }
+     ],
+     roles: [
+       { role: "read", db: "asset" }
+     ]
+   },
+   { w: "majority" , wtimeout: 5000 }
+);
+
+ db.grantRolesToUser( "nodejs", [ { role: "nodeAccess" , db:  "asset" } ]  ) 
+
+#### Create token ###
+
+use asset
+db.counters.insert(
+   {
+      tokenId: "userid",
+      seq: 0
+   }
+)
+
+function getNextSequence(name) {
+   var ret = db.counters.findAndModify(
+          {
+            query: { tokenId: name },
+            update: { $inc: { seq: 1 } },
+            new: true
+          }
+   );
+
+   return ret.seq;
+}
+
+db.tokens.createIndex( { tokenAddr : 1},{ unique: true } ) 
+db.tokens.createIndex( { tokenId : 1},{ unique: true } ) 
+
+#### Rename field name
+
+b.tokens.update( { tokenId : 1 }, { $rename: { 'userid': 'ownerid' } } )
+db.tokens.insert( { 
+ tokenId: 1 ,
+ CoinSymbolID : 2 , 
+ CoinName : "2COIN" ,
+ ownerid :  1 ,
+ tokenAddr : "0x82378cf137F5dFxxxxx4583EA60FA9" , 
+ "contractAddr"  : "0xa70a8d416c22exxxxxx581cebf233d929e5722a1" , 
+ cryptkey : "b859aaa53eac32xxxxxxxxdff83e44312e878c5859f0ef18a73d5328"
+  } )
+
+
+db.coins.createIndex( { coinId : 1},{ unique: true } ) 
+db.coins.insert( { 
+ coinId: 1,
+ coinSymbolId: 1,
+ coinName : "FEN" ,
+ ownerid :  2 ,
+ coinAddr : "0xb4825885d851xxxxxxxxA6e428f5Ea38F23e7b81" ,
+ cryptkey : "9897a80b8c4aeb2xxxxxxcfcd0525636b56346e6b64ab1f1bdc59fd"
+  } )
+
+db.coins.insert( { 
+ coinId: 1,
+ coinSymbolId: 1,
+ coinName : "FEN" ,
+ ownerid :  2 ,
+ coinId : "0x7fFA8706B4BC45xxxxxx456fe48E0376BBa66546" ,
+ cryptkey : "42b8da3694a34bf3xxxxxxxb2ad96e8800331995a72ebaf7ab44645c"
+  } )
+// bdd47b9c9bc4346e33c46bxxxxxxxd2ff559cea4632219e5271fb76  0xd3fc937ce43exxxxx0cbf2b16bec8280441674
+
+db.coins.insert( {
+ coinId: 3,
+ coinSymbolId: 1,
+ coinName : "FEN" ,
+ ownerid :  2 ,
+ coinAddr : "0xd3fc937ce43exxxxxxxf2b16bec8280441674" ,
+ cryptkey : "bdd47b9c9bc4xxxxxxxxx86ef24d61d2ff559cea4632219e5271fb76"
+  } )
+
+db.coins.update( { "coinId" : 3 },{ $set :{ "ownerid" : 3   } }   )
+
+db.owners.createIndex( {  ownerid : 1},{ unique: true } )
+db.owners.insert( { "ownerid" : 1 } , { "ownername" : "Anan" } , { "ownercode" : "3101401348441" } )
+#### Query two Corections  ####
+db.getCollection("owners").aggregate(
+    [
+        { 
+            "$lookup" : {
+                "from" : "coins", 
+                "localField" : "ownerid", 
+                "foreignField" : "ownerid", 
+                "as" : "coin_doc"
+            }
+        },
+        { 
+            "$lookup" : {
+                "from" : "tokens", 
+                "localField" : "ownerid", 
+                "foreignField" : "ownerid", 
+                "as" : "token_doc"
+            }
+        },
+        { 
+            "$match" : {
+                "ownerid" : 2
+            }
+        }
+    ], 
+    { 
+        "allowDiskUse" : false
+    }
+).pretty(); 

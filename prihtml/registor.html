@@ -29,7 +29,7 @@
 		<a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
 	      </li>
 	      <li class="nav-item">
-		<a class="nav-link" href="/registor">Registor</a>
+		<a class="nav-link" href="/account">Login</a>
 	      </li>
 	    </ul>
 	    <form class="form-inline my-2 my-lg-0">
@@ -41,20 +41,40 @@
     <div style="margin-left:10px; >
        <section class="row">
             <section class="col-12 col-sm-4 col-md-3">
-                <form method='post'  action="/account">
+                <form method='post'  action="/registor">
                     <div class="form-group">
-                        <label for="InputUname">Login</label>
-                        <input type="text" name="username" class="form-control" id="InputEUname" aria-describedby="emailHelp" placeholder="User  or Enter email">
+                        <label for="InputUsername">User Name</label>
+                        <input type="text" name="username" class="form-control" id="InputU-Username" aria-describedby="textHelp" placeholder="username">
                     </div>
                     <div class="form-group">
-                        <label for="InputPassword1">Password</label>
-                        <input type="password" name="password" class="form-control" id="InputPassword1" placeholder="Password">
+                        <label for="Input1ftpassword">Password </label>
+                        <input type="password" name="ftPassword" class="form-control" id="Input-Password" aria-describedby="textHelp" placeholder="password">
+                    </div>
+                    <div class="form-group">
+                        <label for="Input2ndpassword">Password </label>
+                        <input type="password" name="ndPassword" class="form-control" id="Input-2Password" aria-describedby="textHelp" placeholder=" confirm password">
+                    </div>
+                    <div class="form-group">
+                        <label for="InputFname">First Name</label>
+                        <input type="text" name="firstname" class="form-control" id="InputU-Firstname" aria-describedby="textHelp" placeholder="First Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="InputLname">Last Name</label>
+                        <input type="text" name="lastname" class="form-control" id="InputU-Lastname" aria-describedby="textHelp" placeholder="Last name">
+                    </div>
+                    <div class="form-group">
+                        <label for="InputLname">Birdth date</label>
+                        <input  type="date"  name="birthdate" class="form-control" id="Input-Birthdate" aria-describedby="dateHelp" >
+                    </div>
+                    <div class="form-group">
+                        <label for="InputEmail">Email</label>
+                        <input type="email" name="useremail" class="form-control" id="InputPassword1" aria-describedby="emailHelp"  placeholder="Email">
                     </div>
                     <div class="form-group form-check">
                         <input type="checkbox" class="form-check-input" id="Check1">
                         <label class="form-check-label" for="Check1">Check me out</label>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary">Registor</button>
                 </form>
             </section>
         </section>

@@ -1,0 +1,31 @@
+function GetAsset(){
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+         // var accounts = JSON.parse(this.responseText);
+         // document.getElementById("respose_msg").innerHTML = "Your Account ID : " + accounts[0];
+         var jdata_res = this.responseText;
+         var obj = JSON.parse(jdata_res) ;
+         document.getElementById("asset_res").innerHTML = obj.res_div   ;
+         document.getElementById("asset_addr").innerHTML = obj.asset_Address ;
+     }
+ };
+    var TXamt = document.getElementById("amount").value ;
+    var TXaddr = document.getElementById("asset_addr").value;
+    var SENDERaddr = document.getElementById("sendaddress").value;
+    var SENDERpass = document.getElementById("ULpass").value;
+
+    document.getElementById("SEND_addr_res").innerHTML = "Sender Address : " + SENDERaddr ;
+    document.getElementById("TX_Address").innerHTML = "To Address : " + TXaddr ;
+    document.getElementById("amount_text").innerHTML = "Amount : " + TXamt ;
+    document.getElementById("asset_res").innerHTML = 'Connecting Blockchain !!!  '  ;
+    document.getElementById("ULpass").value = '' ;
+
+    xhttp.open("GET", "/assetview?amount="+ TXamt +
+                    "&address=" + TXaddr +
+                    "&sender=" + SENDERaddr +
+                    "&pointer=" + "txasset" +
+                    "&spadd=" + SENDERpass , true);
+    xhttp.send();
+} // END FUNC
+
