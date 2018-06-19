@@ -6,7 +6,11 @@
 */
 var express = require('express') ;
 var config = require('./etc/config.json');
-
+var DBresp = require('./lib/mongoDb') ; // load function under mongDB.js
+var coinFunc = require('./lib/coinfunction') ; // 
+var TXTdata = require('./lib/txtdata') ; // 
+var TokenCfg  = require('./lib/tokenconfig') ; // 
+var mathFunc = require('./lib/mathFunc') ; // 
 const util = require('util') ; // tool for view [object to JSON ]
 var port = config.WEBPORT ;
 var path = require('path');
@@ -19,7 +23,6 @@ var webserver = express() ;
 var bodyParser = require('body-parser') ;  // Get Post data
 var web3 =  new Web3("http://" + config.RPCSVR + ":" + config.RPCPORT ) ;
 var sleep = require('sleep');
-var DBresp = require('./lib/mongoDb') ; // load function under mongDB.js
 var mathFunc = require('./lib/mathFunc') ; // load function under mongDB.js
 //
 //
@@ -47,6 +50,11 @@ function checkAuth (req, res, next) {
 	             return;
 	         } //
 	        if (req.url === '/assetview' && (!req.session || !req.session.authenticated)) {
+                     console.log ( "come to asset  authen check :  " + req.session + " : authen :  " + req.session.authenticated ) ;
+	             res.sendFile(__dirname + '/errhtml/unauthorised.html', { status: 403 });
+	             return;
+	         } // 
+	        if (req.url === '/sendasset' && (!req.session || !req.session.authenticated)) {
                      console.log ( "come to asset  authen check :  " + req.session + " : authen :  " + req.session.authenticated ) ;
 	             res.sendFile(__dirname + '/errhtml/unauthorised.html', { status: 403 });
 	             return;
@@ -157,14 +165,7 @@ console.log("Use RPC server]:" + config.RPCSVR + ":" + config.RPCPORT ) ;
                          } //
 		 }) //
    }) ; //
-   webserver.get('/txmode', function (req, res, next) {
-	                          //req.session.destroy();
-	                  // res.sendFile(__dirname + '/errhtml/logedout.html');
-	       // var type = req.params.type , mode  = req.params.mode ;
-	      //   res.setHeader('content-type', 'application/json',);
-	        res.send(" aaaaaaa " ) ;
-	        //return true ;
-	});
+
 
    webserver.get('/registor',(req, res,next) => {
      //res.sendFile(__dirname + '/pubhtml/account.html');
@@ -272,7 +273,7 @@ console.log("Use RPC server]:" + config.RPCSVR + ":" + config.RPCPORT ) ;
 
    webserver.get('/coinsview',(req, res) => {
 	   // console.log (web3.utils.fromWei( "3423837732949323425392388453453222",'ether') ) ;
-	   if ( !req.session.authenticated ){ res.send ( {"ERROR" :  "Re Login again <a href='/account'   > Login </a> " } ); return } ;
+	   if ( !req.session.authenticated ){ res.send( TXTdata.cnlogin  ); return } ;
 	   var userid = req.session.userid ;
 	    // console.log("Session uid : " + req.session.userid ) ;
 	   //var userid = req.query.amount ;
@@ -304,7 +305,7 @@ console.log("Use RPC server]:" + config.RPCSVR + ":" + config.RPCPORT ) ;
    }) // End Get 
 
    webserver.get('/assetview',(req, res) => {
-	   if ( !req.session.authenticated ){ res.send ( {"ERROR" : "Re Login again <a href='/account'   > Login </a> " } ); return } ;
+	   if ( !req.session.authenticated ){ res.send ( TXTdata.aslogin ); return } ;
 	   var userid = req.session.userid ;
 	   console.log("Session uid : " + req.session.userid ) ;
 	   //var userid = req.query.amount ;
@@ -314,7 +315,7 @@ console.log("Use RPC server]:" + config.RPCSVR + ":" + config.RPCPORT ) ;
 	   if (err) return  err ;  
 	   if (data) for ( x in data ) {   
    	   //console.log ( "TOKEN Name  "+  data[x].tokenName + " Addr   " + data[x].tokenAddr + " CONTRACT : " + data[x].contractAddr  ) ;
-	   txt += ('<div class="row"><div class="col" style="background-color: #ddddff; color: #333333"  >'+ data[x].tokenName + 
+	   txt += ('<div class="row"><div class="col" style="background-color: #ddddff; color: #333333" >'+ data[x].tokenName + 
 		   ' Balance :  ' + 
 		   mathFunc.numberWithCommas (web3.utils.fromWei( data[x].tokenBalance.toString(),'ether'))  +
 		   '</div></div>' ) ;
@@ -322,7 +323,9 @@ console.log("Use RPC server]:" + config.RPCSVR + ":" + config.RPCPORT ) ;
 			   "item" : x ,
 			   "res_div" : txt ,
 			   "ERROR" : "" ,
-			   "asset_Address" : data[x].tokenAddr
+			   "asset_Address" : data[x].tokenAddr,
+			   "asset_contract" : data[x].contractAddr
+		  // "asset_cryptkey" : data[x].cryptkey
 		   } // 
 		} // 
               console.log ( JSON.stringify( jdata ) ) ;
@@ -333,6 +336,58 @@ console.log("Use RPC server]:" + config.RPCSVR + ":" + config.RPCPORT ) ;
 	   return ; 
    }) // End Get 
 
+   webserver.get('/sendasset', function (req, web_res, next) {
+	   console.log (  "ASS DATA " + JSON.stringify(req.query,null,'\t') ) ;
+	   console.log (  "SESSION DATA " + JSON.stringify(req.session,null,'\t') ) ;
+	   if ( !req.session.authenticated ){
+                   console.log ( " no authen at /sendasset  " + JSON.stringify(TXTdata.aslogin,null,'\t')  ) ;
+		   web_res.send ( TXTdata.aslogin ); return  ; } ;
+	   var userid = req.session.userid ;
+	   var pointer = req.query.pointer ;
+	   var asset_contract = req.query.asset_contract ;
+	   var SenderAddress = req.query.SenderAddress ;
+	   var receiverAddress = req.query.receiverAddress ;
+	   var assetAmount = req.query.assetAmount ;
+	   var sparse = req.query.sparse ;
+	   var x,txt = "" ;
+	   var jdata = [] ;
+	   DBresp.data.idChkPass( userid  , function(psserr, pssdata){ 
+                   console.log ( " #################" , JSON.stringify(pssdata,null,'\t') ) ; 
+		   if ( pssdata.answer.password === sparse ) {    
+		//	   web_res.send(TXTdata.assendvalerr) ; 
+			   DBresp.data.PairChkTokens ( userid , SenderAddress , receiverAddress ,
+				   asset_contract , assetAmount , sparse  ,  function (err,tokenDatas){
+			   if (err) return  err ;  
+			   console.log ( " ======> " + JSON.stringify(tokenDatas,null,'\t') ) ;
+		           var ETvalue = tokenDatas[0].tokenBalance   ; 			   
+		           var txAssetValue = web3.utils.toWei( assetAmount  , "ether")  ; 			   
+		           var resContract = tokenDatas[0].contractAddr  ;
+		           var resCryptKey = tokenDatas[0].cryptkey  ;
+		           var BeETtxAssetValue    =   web3.utils.fromWei(txAssetValue, "ether") ;
+		           var BeETtokenD18atlease =   web3.utils.fromWei(TokenCfg.tokenD18atlease, "ether") ;
+	                   console.log ( " CHK CONVERTED VAL " + BeETtxAssetValue +  " :  " + BeETtokenD18atlease  ) ; 
+			   if ( (BeETtxAssetValue/1)  < (BeETtokenD18atlease/1)  ){ 
+				  console.log ( " ERR low value \n" +  JSON.stringify(TXTdata.assendvalerr,null,'\t')  ) 
+				  web_res.send(TXTdata.assendvalerr) ;  return }  ;
+
+                             coinFunc.coinbase.sendAsset (   // do hard function 
+		                     SenderAddress ,
+                                     receiverAddress ,
+                                     resContract  ,
+                                     resCryptKey ,
+                                     txAssetValue ,
+                                     function ( err , res  ) {
+                          if ( res ) console.log( " Coin OUTPUT : \n\n\n\n\n" +
+				  "DONE ! TXiD  " + JSON.stringify(res.transactionHash ,null,'\t' ) )    ;
+                           });
+
+			   }) // END if  in PairsendTokens  
+			  }   // END Check balance 
+		     // web_res.send( jdata  );
+	   })  ;  /// End chk password  
+	   return ; 
+});
+
   webserver.get('/assets',(req, WEBres) => {
    //var user  = req.query.userlogin.trim() ; 
    var crypt = req.query.cryptid  ;
@@ -342,26 +397,6 @@ console.log("Use RPC server]:" + config.RPCSVR + ":" + config.RPCPORT ) ;
     }else {
         WEBres.send(  "Just nothing " ) ;
     }
-
-	  /*
-	  if (req.session.authenticated){
-               console.log( "CHK AUTHEN WITHDRAW : " + req.session.authenticated ) ;
-	  } // End if 
-	  */
-
-  /*
-    DBresp.data.chkpass(user, function(err, data)  {
-       if( upass==data.answer.password && data.answer.stat == "found" && data.answer.error == null  ){
-	  session =  req.session; 
-	  session.authenticated = true;
-  	//  WEBres.redirect(  '/tokens'  ) ;
-       }else {
-          req.session.destroy();
-          WEBres.redirect ('/account') ;
-          //WEBres.send(  "Login Failed " ) ;
-	} //
-    });
-    */ 
 
   }) // END 
 
@@ -377,7 +412,12 @@ console.log("Use RPC server]:" + config.RPCSVR + ":" + config.RPCPORT ) ;
        } //
    }) ;
 webserver.get('/dextransfer',(req, WEBres) => {
-if ( !req.session.authenticated ){ WEBres.send ( "Re Login again <a href='/account'   > Login </a> " ); return } ;	
+if ( !req.session.authenticated ){ WEBres.send ( {
+		"ERROR" : "Re Login again <a href='/account'   > Login </a> " ,
+		"coin_address" : "0x0" ,
+		"item" : -1 ,
+		"res_div" : '<div class="col" > </div>'
+        }); return } ;	
  console.log( " RES DATA " + JSON.stringify(req.query) ) ;
 var pointer  = req.query.pointer ; 
 var tx_amonut  = req.query.amount ; 
@@ -405,8 +445,6 @@ console.log("Pointer = " + pointer ) ;
    return false ; 
  }
 
- 
-
  console.log('type of VALUE_ETH  ' + typeof VALUE_ETH  + " Address :" +  rx_address );
  console.log('Amount is : '+ tx_amonut + " Address :" +  rx_address );
 
@@ -422,8 +460,8 @@ console.log("Pointer = " + pointer ) ;
 			     web3.eth.sendTransaction({
 			     from: TX_ac,
 			     to: rx_address ,
-			     gas: 90000 ,
-                             gasPrice: 18000000000 ,
+			     gas: TokenCfg.sendcfg.gas ,   // 21000 wei
+                             gasPrice: TokenCfg.sendcfg.gasprice ,   // 1.8Gwei
 			     value: web3.utils.toWei( VALUE_ETH , "ether") ,
 			     }, function(err, transactionHash) {
 				    if (err) {

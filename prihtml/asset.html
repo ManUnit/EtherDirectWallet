@@ -77,7 +77,7 @@
                                     <td>
                                         Receiver Address : </td>
                                     <td>
-                                        <input type="text" name="receiverAddress" id="receiverAddress" value="" style="width: 500px;">
+                                        <input type="text" name="receiverAddress" id="receiverAddress" value="" style="width: 400px;">
                                     </td>
                                 </tr>
                                 <tr>
@@ -104,10 +104,26 @@
                         </div> <!-- Coinfill form -->
                     </div>
                     <div class="tab-pane fade" id="pills-tokens" role="tabpanel" aria-labelledby="pills-tokens-tab">
-                        <div class="col" id="asset_err" >  </div>
                         <div class="col" id="asset_res" >  </div>
+                        <div class="col" id="asset_err" >  </div>
                         <input type="hidden" class="col" id="asset_addr" value = "0x0" > 
-
+                        <input type="hidden" class="col" id="asset_contract" value = "0x0" > 
+                        <label id="token_asset_res"> </label>
+			<div class="col-6 col-md-6" > 
+				<label id="asset_label_rx">Receiver Address :</label>
+				<input type="text" id="assetReceiver" > 
+		        </div>
+                        <div class="col-6 col-md-6" >
+				<label id="asset_label_amount">Amount token : </label>
+				<input type="text" id="assetAmount" > 
+		        </div>
+                        <div class="col-6 col-md-6" >
+				<label id="asset_label_password">Login Password : </label>
+				<input type="password" id="accountParse" > 
+			</div>
+                        <div>
+                               <button  onclick="SendAsset()" >Send Tokens</button> 
+                        </div>
                         </div>
                     </div>
                 </div>
