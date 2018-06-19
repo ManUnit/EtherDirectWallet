@@ -3,6 +3,8 @@
 
 "# AnandaWallet web Payment service" 
 
+# Suppurt ERC-20
+
 installing :
 
 git clone https://github.com/hs1gab/EtherDirectWallet
