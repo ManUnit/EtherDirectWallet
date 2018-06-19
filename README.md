@@ -3,7 +3,7 @@
 
 "# AnandaWallet web Payment service" 
 
-# Suppurt ERC-20
+* Support ERC-20
 
 installing :
 
