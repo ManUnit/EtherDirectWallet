@@ -7,7 +7,7 @@
 
 installing :
 
-git clone https://github.com/hs1gab/EtherDirectWallet
+git clone https://github.com/manunit/EtherDirectWallet
 
 * run npm install
 
