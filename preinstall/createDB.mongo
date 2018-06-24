@@ -140,7 +140,7 @@ db.tokens.createIndex( { tokenId : 1},{ unique: true } )
 
 #### Rename field name
 
-b.tokens.update( { tokenId : 1 }, { $rename: { 'userid': 'ownerid' } } )
+db.tokens.update( { tokenId : 1 }, { $rename: { 'userid': 'ownerid' } } )
 db.tokens.insert( { 
  tokenId: 1 ,
  CoinSymbolID : 2 , 
@@ -214,3 +214,32 @@ db.getCollection("owners").aggregate(
         "allowDiskUse" : false
     }
 ).pretty(); 
+
+
+use transactions 
+db.historyrecords.createIndex( {  transacId : 1},{ unique: true } )
+db.createRole(
+   {
+     role: "nodeAccess",
+     privileges: [
+       { resource: { db: "transactions", collection: "" }, actions: [ "find",  "insert"  ] }
+     ],
+     roles: [
+       { role: "read", db: "transactions" }
+     ]
+   },
+   { w: "majority" , wtimeout: 5000 }
+);
+db.grantRolesToUser( "nodejs", [ { role: "nodeAccess" , db:  "" } ]  )
+db.historyrecords.insert({  transacId : 1  ,
+ "datetime" : new Date() ,  "ownerid" : 1  , 
+                   "cryptoname" : "2COIN"  ,
+                   "txaddress" : "0x82378cf137F5dF4FA730529eB79a4583EA605FA9"  ,
+                   "rxaddress" : "0x6c4811feb65fd028a3d5bdd53fe65681f620471d"  ,
+                   "value" : "5000"  ,
+                   "netfee" : "0"  ,
+                   "contract" : "0xa70a8d416c22e5817323f2cebf233d929e5722a1"  ,
+                   "txhash" : "0xd5d7994096f89eb1a769a6823ab939c6c92efbd0e1ffc8405c27dbd2bcb0f253" ,
+                   "transacdata" : "" ,
+                   "massage" : "" 
+})

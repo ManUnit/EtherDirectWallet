@@ -25,6 +25,7 @@ function SendAsset() {
          //document.getElementById("asset_res").innerHTML = jdata_res.res_div  ;
          document.getElementById("asset_err").innerHTML = jdata_res.ERROR  ;
          document.getElementById("token_asset_res").innerHTML = jdata_res.send_div  ;
+         document.getElementById("transac_asset_res").innerHTML = jdata_res.transac_asset_res  ;
       }
     };
     var txAddress = document.getElementById("asset_addr").value;
@@ -38,6 +39,7 @@ function SendAsset() {
     // Clear Response 	
     document.getElementById("asset_err").innerHTML = ''  ;
     document.getElementById("token_asset_res").innerHTML = ''  ;
+    document.getElementById("transac_asset_res").innerHTML = ' your transaction is in process please wait around 2 minute at least '  ;
 
     // document.getElementById("asset_res").innerHTML = 'Connection Blockchain !!! click again '  ;
     xhttp.open("GET", "/sendasset?SenderAddress=" + txAddress +

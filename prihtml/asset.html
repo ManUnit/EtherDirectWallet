@@ -16,6 +16,10 @@
     li:hover {
         background-color: #fafafa;
     }
+    .table-hover>tbody>tr:hover>td, .table-hover>tbody>tr:hover>th {
+	      background-color: #ffeeaa;
+		        color:#333333;
+    }
     </style>
 </head>
 
@@ -55,7 +59,10 @@
                         <a class="nav-link" id="pills-coins-tab" data-toggle="pill" href="#pills-coins" onclick="GetCoins()" role="tab" aria-controls="pills-coins" aria-selected="false">Coins</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-tokens" onclick="GetAsset()" role="tab" aria-controls="pills-tokens" aria-selected="false">Tokens ERC-20</a>
+                        <a class="nav-link" id="pills-contract-tab" data-toggle="pill" href="#pills-tokens" onclick="GetAsset()" role="tab" aria-controls="pills-tokens" aria-selected="false">Tokens ERC-20</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="pills-transac-tab" data-toggle="pill" href="#pills-transac" onclick="GetTransac()" role="tab" aria-controls="pills-transac" aria-selected="false">Transactions</a>
                     </li>
                 </ul>
                 <div class="tab-content" id="pills-tabContent">
@@ -66,12 +73,13 @@
                         <div class="col" id="dep_res"> </div>
                     </div>
                     <div class="tab-pane fade" id="pills-coins" role="tabpanel" aria-labelledby="pills-coins-tab">
-			<div class="col" id="coins_err"> </div>
+                        <div class="col" id="coins_err"> </div>
                         <div class="col" id="coins_res"> </div>
-                        <input type="hidden"  id="coins_addr">
-                        <div class="col" >
-			<label id="amount_text"> </label> <label class="col" id="co_addr_res" > </label>
-			    <h4 id="transec_id"></h4>  
+                        <input type="hidden" id="coins_addr">
+                        <div class="col">
+                            <label id="amount_text"> </label>
+                            <label class="col" id="co_addr_res"> </label>
+                            <h4 id="transec_id"></h4>
                             <table>
                                 <tr>
                                     <td>
@@ -93,45 +101,57 @@
                                     <td>
                                         Sender Password : </td>
                                     <td>
-                                        <input type="password" name="ULpass" id="ULpass" value="" sise="20" >
-                                </td> </tr>
-                                </table>
-                                 <div>
-                                        <button  onclick="SendCoins()" > Enter  </button> 
-                                </div>
-
-
-                        </div> <!-- Coinfill form -->
+                                        <input type="password" name="ULpass" id="ULpass" value="" sise="20">
+                                    </td>
+                                </tr>
+                            </table>
+                            <div>
+                                <button onclick="SendCoins()"> Enter </button>
+                            </div>
+                        </div>
+                        <!-- Coinfill form -->
                     </div>
                     <div class="tab-pane fade" id="pills-tokens" role="tabpanel" aria-labelledby="pills-tokens-tab">
-                        <div class="col" id="asset_res" >  </div>
-                        <div class="col" id="asset_err" >  </div>
-                        <input type="hidden" class="col" id="asset_addr" value = "0x0" > 
-                        <input type="hidden" class="col" id="asset_contract" value = "0x0" > 
+                        <div class="col" id="asset_res"> </div>
+                        <div class="col" id="asset_err"> </div>
+                        <input type="hidden" class="col" id="asset_addr" value="0x0">
+                        <input type="hidden" class="col" id="asset_contract" value="0x0">
                         <label id="token_asset_res"> </label>
-			<div class="col-6 col-md-6" > 
-				<label id="asset_label_rx">Receiver Address :</label>
-				<input type="text" id="assetReceiver" > 
-		        </div>
-                        <div class="col-6 col-md-6" >
-				<label id="asset_label_amount">Amount token : </label>
-				<input type="text" id="assetAmount" > 
-		        </div>
-                        <div class="col-6 col-md-6" >
-				<label id="asset_label_password">Login Password : </label>
-				<input type="password" id="accountParse" > 
-			</div>
-                        <div>
-                               <button  onclick="SendAsset()" >Send Tokens</button> 
-                        </div>
-                        </div>
+                        <label id="transac_asset_res"> </label>
+                         <table>
+		            <tr><td>
+                            <label id="asset_label_rx"   >Receiver Address :</label>
+			    </td><tr>
+		            <tr><td>
+                            <input type="text" id="assetReceiver" style="width: 400px;"  >
+			    </td></tr>
+		            <tr><td>
+                            <label id="asset_label_amount"   > Amount token : </label>
+			    </td></tr>
+		             <tr><td>
+                            <input type="text" id="assetAmount" onkeypress='validate(event)'  >
+			    </td></tr>
+		            <tr><td>
+                            <label id="asset_label_password">Login Password : </label>
+			    </td></tr>
+		            <tr><td>
+                            <input type="password" id="accountParse">
+			    </td></tr>
+		            <tr><td>
+                            <button onclick="SendAsset()">Send Tokens</button>
+			    </td></tr>
+                         </table>
+                    </div>
+                    <div class="tab-pane fade " id="pills-transac" role="tabpanel" aria-labelledby="pills-transac-tab">
+                        <div class="col" id="transac_res"> TTTTTT </div>
                     </div>
                 </div>
+                <!--  content   -->
             </div>
-            <!--  content   -->
-            <!--Sub  Menu bar -->
         </div>
-        <!-- Main col -->
+        <!--Sub  Menu bar -->
+    </div>
+    <!-- Main col -->
     </div>
     <!-- Main  Row   -->
     </div>
@@ -146,6 +166,7 @@
     <script src="/js/inc_co.js"></script>
     <script src="/js/inc_as.js"></script>
     <script src="/js/getfunction.js"></script>
+    <script src="/js/transac.js"></script>
     <script src="/js/dep.js"></script>
 </body>
 
