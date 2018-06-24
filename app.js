@@ -5,6 +5,7 @@
 
 */
 //require ('es6') ;  // Multiline support
+const request = require('request');
 var express = require('express');
 var config = require('./etc/config.json');
 var DBresp = require('./lib/mongoDb'); // load function under mongDB.js
@@ -13,6 +14,9 @@ var TXTdata = require('./lib/txtdata'); //
 var TokenCfg = require('./lib/tokenconfig'); //
 var mathFunc = require('./lib/mathFunc'); //
 const util = require('util'); // tool for view [object to JSON ]
+var Recaptcha = require('node-recaptcha2').Recaptcha;
+//var racaptcha = new Recaptcha{'md84kdis3sl25&84@*^&3637','die9@#8$&!k29sd3k9'} ;
+var recaptcha = new Recaptcha('6LfjdWAUAAAAAFX2rMfT_LrXj9ZJScmaymQCSEsj', '6LfjdWAUAAAAABFf2Ld6Bks4L9aeQKM2zTJcD9Vl', options);
 var port = config.WEBPORT;
 var path = require('path');
 var CookieParser = require('cookie-parser');
@@ -124,51 +128,83 @@ webserver.get('/logout', function(req, res, next) {
 
 webserver.get('/account', (req, res, next) => {
     //res.sendFile(__dirname + '/pubhtml/account.html');
+    //res.render('login', { captcha:res.recaptcha });
     res.sendFile(__dirname + '/prihtml/login.html');
 
 })
 
 webserver.post('/account', (logreq, res, next) => {
-
+    // const secretKey = config.recaptcha.SecretKey  ; // registor https://www.google.com/recaptcha/admin
+    // const verificationURL = "https://www.google.com/recaptcha/api/siteverify?secret=" +
+    //     secretKey + "&response=" + logreq.body ;
     var inUsername = "";
-    if (logreq.body.username) inUsername = logreq.body.username.toLowerCase();
+    var data = {
+        remoteip: logreq.connection.remoteAddress,
+        response: logreq.body['g-recaptcha-response']
+    };
 
-    DBresp.data.Regchkpass(inUsername, function(err, data) {
-        if (
-            inUsername &&
-            inUsername === data.answer.userlogin &&
-            logreq.body.password &&
-            logreq.body.password === data.answer.password &&
-            data.answer.stat === "found" &&
-            data.answer.error === null
-        ) {
-            logreq.session.authenticated = true;
-            logreq.session.objid = data.answer.objid;
-            logreq.session.userid = data.answer.userid;
-            logreq.session.username = data.answer.userlogin;
-            // Checking another session
-            // findSesion
-            var x = "";
-            var unixtime = Math.round((new Date()).getTime() / 1);;
-            // console.log ( " Unix time : " + unixtime ) ;
-            //DBinfo  insertSession =  function ( userId , sess ,unixtime , ipaddress , SSdata )
-            DBresp.data.insertSession(
-                data.answer.userid,
-                logreq.session.id,
-                unixtime,
-                logreq.connection.remoteAddress,
-                function(err, ssData) {
+    var recaptcha = new Recaptcha(config.recaptcha.SiteKey,
+        config.recaptcha.SecretKey, data);
 
-                }) //
-            res.redirect('/');
-            return true;
+    recaptcha.verify(function(success, error_code) {
+        if (success) {
+            // res.send('Recaptcha response valid. OK success');
+            recaptCha_stat = true;
+            console.log("Captcha success");
+            console.log(" BODY  " + JSON.stringify(logreq.body, null, '\t'));
+            if (logreq.body.username) inUsername = logreq.body.username.toLowerCase();
+
+            DBresp.data.Regchkpass(inUsername, function(err, data) {
+                if (
+                    inUsername &&
+                    inUsername === data.answer.userlogin &&
+                    logreq.body.password &&
+                    logreq.body.password === data.answer.password &&
+                    data.answer.stat === "found" &&
+                    data.answer.error === null &&
+                    recaptCha_stat === true
+
+                ) {
+                    logreq.session.authenticated = true;
+                    logreq.session.objid = data.answer.objid;
+                    logreq.session.userid = data.answer.userid;
+                    logreq.session.username = data.answer.userlogin;
+                    // Checking another session
+                    // findSesion
+                    var x = "";
+                    var unixtime = Math.round((new Date()).getTime() / 1);;
+                    // console.log ( " Unix time : " + unixtime ) ;
+                    //DBinfo  insertSession =  function ( userId , sess ,unixtime , ipaddress , SSdata )
+                    DBresp.data.insertSession(
+                        data.answer.userid,
+                        logreq.session.id,
+                        unixtime,
+                        logreq.connection.remoteAddress,
+                        function(err, ssData) {
+
+                        }) //
+                    res.redirect('/');
+                    return true;
+                } else {
+                    // logreq.session.authenticated = false;
+                    //logreq.flash('error', 'Username and password are incorrect');
+                    logreq.session.destroy();
+                    res.sendFile(__dirname + '/errhtml/loginfail.html');
+                    return false;
+                } //
+            }); //
+
         } else {
-            logreq.session.authenticated = false;
-            //logreq.flash('error', 'Username and password are incorrect');
+            recaptCha_stat = false;
+            // res.send('Recaptcha response valid. Fail');
+            logreq.session.destroy();
+            console.log("Captcha fail")
             res.sendFile(__dirname + '/errhtml/loginfail.html');
-            return false;
-        } //
-    }) //
+            return;
+        }
+    });
+
+
 }); //
 
 
@@ -179,53 +215,77 @@ webserver.get('/registor', (req, res, next) => {
 
 webserver.post('/registor', (Rereq, Reres, next) => {
     // chkUser,chkEmail,callback
-    var ReqName, ReqEmail = "";
-    if (Rereq.body.username) ReqName = Rereq.body.username.toLowerCase();
-    if (Rereq.body.useremail) ReqEmail = Rereq.body.useremail.toLowerCase();
-    console.log(" User Name " + ReqName + "  Email : " + ReqEmail);
-    if (Rereq.body.useremail === '' || Rereq.body.username === '' ||
-        Rereq.body.ftpassword === '' || Rereq.body.ndpassword === '' ||
-        Rereq.body.firstname === '' || Rereq.body.lastname === ''
-    ) {
-        console.log("No enough registor info ");
-        Reres.send("no input enough request all fill " + "<a href='/registor'> Registor </a> ");
-        return false;
-    }
-    if (Rereq.body.ftPassword != Rereq.body.ndPassword) {
-        console.log("Password not match");
-        //res.send( "Password mismatch" );
-        Reres.send("Password mismatch" + "<a href='/registor'> Registor again </a> ");
-        return false;
-    } //
-    DBresp.data.regExisting(Rereq.body.username, Rereq.body.useremail, function(err, data) {
-        console.log(" CHK ANSWER DATA   " + data.answer.userlogin + "   " + data.answer.email + "  " + data.answer.stat + "  " + data.answer.error);
-        if (
-            ReqName == data.answer.userlogin ||
-            ReqEmail == data.answer.email ||
-            data.answer.stat == "existing" ||
-            data.answer.error != null
-        ) {
-            Reres.send("Existing user or email were regristoered " + " user :" + data.answer.userlogin + " email  :" + data.answer.email + "  stat : " + data.answer.stat + " ==> " + "<a href='/registor'> Registor again </a> ");
-            return false;
-        } else {
-            // Reres.send( "All OK " + Rereq.body.useremail +  "<a href='/registor'> Registor again </a> "  );
-            //  uname,fname,lname,email,birth,pass
-            var uname = ReqName;
-            var fname = Rereq.body.firstname;
-            var lname = Rereq.body.lastname;
-            var email = ReqEmail;
-            var birth = Rereq.body.birthdate;
-            var pass = Rereq.body.ftPassword;
 
-            DBresp.data.insertReg(uname, fname, lname, email, birth, pass, function(err, dat) {
-                //DBresp.data.insertLoginUser( uname,fname,lname,email,birth,pass,function(err, dat){
-                if (err) return false;
-                console.log(" RETURN INSERT " + dat);
-                Reres.send("Registoring  done !! " + dat + " Go login just click <a href='/account'> Go Login </a> ");
-                return true;
-            }) // End insert
-        } //
-    }) //
+    var data = {
+        remoteip: Rereq.connection.remoteAddress,
+        response: Rereq.body['g-recaptcha-response']
+    };
+
+    var recaptcha = new Recaptcha(config.recaptcha.SiteKey,
+        config.recaptcha.SecretKey, data);
+
+    recaptcha.verify(function(success, error_code) {
+        if (success) {
+            console.log(" Recaptcha  OK success ");
+            var ReqName, ReqEmail = "";
+            if (Rereq.body.username) ReqName = Rereq.body.username.toLowerCase();
+            if (Rereq.body.useremail) ReqEmail = Rereq.body.useremail.toLowerCase();
+            console.log(" User Name " + ReqName + "  Email : " + ReqEmail);
+            if (Rereq.body.useremail === '' || Rereq.body.username === '' ||
+                Rereq.body.ftpassword === '' || Rereq.body.ndpassword === '' ||
+                Rereq.body.firstname === '' || Rereq.body.lastname === ''
+            ) {
+                console.log("No enough registor info ");
+                Reres.send("no input enough request all fill " + "<a href='/registor'> Registor </a> ");
+                return false;
+            }
+            if (Rereq.body.ftPassword != Rereq.body.ndPassword) {
+                console.log("Password not match");
+                //res.send( "Password mismatch" );
+                Reres.send("Password mismatch" + "<a href='/registor'> Registor again </a> ");
+                return false;
+            } //
+
+
+            DBresp.data.regExisting(Rereq.body.username, Rereq.body.useremail, function(err, data) {
+                console.log(" CHK ANSWER DATA   " + data.answer.userlogin + "   " + data.answer.email + "  " + data.answer.stat + "  " + data.answer.error);
+                if (
+                    ReqName == data.answer.userlogin ||
+                    ReqEmail == data.answer.email ||
+                    data.answer.stat == "existing" ||
+                    data.answer.error != null
+                ) {
+                    Reres.send("Existing user or email were regristoered " + " user :" + data.answer.userlogin + " email  :" + data.answer.email + "  stat : " + data.answer.stat + " ==> " + "<a href='/registor'> Registor again </a> ");
+                    return false;
+                } else {
+                    // Reres.send( "All OK " + Rereq.body.useremail +  "<a href='/registor'> Registor again </a> "  );
+                    //  uname,fname,lname,email,birth,pass
+                    var uname = ReqName;
+                    var fname = Rereq.body.firstname;
+                    var lname = Rereq.body.lastname;
+                    var email = ReqEmail;
+                    var birth = Rereq.body.birthdate;
+                    var pass = Rereq.body.ftPassword;
+
+                    DBresp.data.insertReg(uname, fname, lname, email, birth, pass, function(err, dat) {
+                        //DBresp.data.insertLoginUser( uname,fname,lname,email,birth,pass,function(err, dat){
+                        if (err) return false;
+                        console.log(" RETURN INSERT " + dat);
+                        Reres.send("Registoring  done !! " + dat + " Go login just click <a href='/account'> Go Login </a> ");
+                        return true;
+                    }) // End insert
+                } //
+            }) //
+
+        } else {
+
+            Reres.send("<h1> Please verify recaptcha with </h1> " + "<a href='/registor'> Registor </a> ");
+            return false;
+
+        };
+
+    });
+
 }); //
 
 webserver.get('/tokens', (req, res) => {
@@ -299,7 +359,7 @@ webserver.get('/coinsview', (req, res) => {
                     mathFunc.numberWithCommas(web3.utils.fromWei(data[x].coinBalance.toString(), 'ether')) +
                     '</div></div>');
             } //
-	   if ( !data[x].coinAddr ) data[x].coinAddr = '' ;
+        if (!data[x].coinAddr) data[x].coinAddr = '';
         jdata = {
             "ERROR": "",
             "position": "coinview",
@@ -405,7 +465,7 @@ webserver.get('/sendasset', function(req, web_res, next) {
                         function(err, res) {
                             if (err) {
                                 console.log("Send tokens error ====> " + err);
-                                TXTdata.err_resp.transac_asset_res = err ; 
+                                TXTdata.err_resp.transac_asset_res = err;
                                 web_res.send(TXTdata.err_resp);
                                 return false;
                             };
@@ -439,16 +499,15 @@ webserver.get('/sendasset', function(req, web_res, next) {
                                     "send_div": '<div class="col" >  </div>',
                                 };
                                 // console.log (  res_txt ) ;
-                                console.log("Response web " + send_resp)
+                                console.log("Response web " + JSON.stringify(send_resp));
                                 web_res.send(send_resp);
                                 return true;
                             }
                         });
 
                 }) // END if  in PairsendTokens
-        } else {
-             ;
-            
+        } else {;
+
             web_res.send(TXTdata.wrong_resp);
             return false;
 

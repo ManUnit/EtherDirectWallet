@@ -1,16 +1,25 @@
-{  
-  "Version" : "1.0.1M" ,
-  "Revision" : "19" ,
-  "RPCSVR": "127.0.0.1",
-  "TKRPCSVR": "127.0.0.1",
-  "RPCPORT": "8545",
-  "WEBPORT" : "4000" ,
-  "ExpolrerSvr" : {
-          "ip" : "202.151.178.21" ,
-          "port" : "3000"
-  },
-  "mongoDB" : { "user" : "webdata" , 
-                 "password" : "webpass"  ,
-                "serverIp" :  "127.0.0.1"
-                }
+{
+    "Version": "1.0.1M",
+    "Revision": "19",
+    "RPCSVR": "localhost",
+    "TKRPCSVR": "localhost",
+    "RPCPORT": "8545",
+    "WEBPORT": "4000",
+    "ExpolrerSvr":
+    {
+        "ip": "202.151.178.21",
+        "port": "3000"
+    },
+    "mongoDB":
+    {
+        "user": "webdata",
+        "password": "webpass",
+        "serverIp": "127.0.0.1"
+    },
+    "recaptcha":
+    {
+        "SecretKey": "LfjdWAUAAAAABFf2Ld6Bks4L9aeQKM2zTJcD9Vl",
+        "SiteKey": "LfjdWAUAAAAAFX2rMfT_LrXj9ZJScmaymQCSEsj"
+
+    }
 }
