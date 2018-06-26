@@ -1,8 +1,8 @@
 {
     "Version": "1.0.1M",
     "Revision": "19",
-    "RPCSVR": "localhost",
-    "TKRPCSVR": "localhost",
+    "RPCSVR": "127.0.0.1",
+    "TKRPCSVR": "127.0.0.1",
     "RPCPORT": "8545",
     "WEBPORT": "4000",
     "ExpolrerSvr":
@@ -18,8 +18,18 @@
     },
     "recaptcha":
     {
-        "SecretKey": "LfjdWAUAAAAABFf2Ld6Bks4L9aeQKM2zTJcD9Vl",
-        "SiteKey": "LfjdWAUAAAAAFX2rMfT_LrXj9ZJScmaymQCSEsj"
+        "SecretKey": "6LfjdWAUAAAAABFf2Ld6Bks4L9aeQKM2zTJcD9Vl",
+        "SiteKey": "6LfjdWAUAAAAAFX2rMfT_LrXj9ZJScmaymQCSEsj"
 
-    }
+    },
+    "siteinfo":
+    {
+        "sitename": "2Fellows"
+
+    },
+    "qrcodeURL" : {
+        "head" : "<img src=https://api.qrserver.com/v1/create-qr-code/?data=" ,
+        "tail" :  "&amp;size=200x200 >"
+    } 
+
 }

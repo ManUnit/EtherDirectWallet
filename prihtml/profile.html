@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <!--  <link rel="stylesheet" type="text/css" href="/css/button.css"> -->
+    <title>2FL Exchange</title>
+    <style>
+    a {
+        color: hotpink;
+    }
+
+    li:hover {
+        background-color: #fafafa;
+    }
+
+    .table-hover>tbody>tr:hover>td,
+    .table-hover>tbody>tr:hover>th {
+        background-color: #ffeeaa;
+        color: #333333;
+    }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-primary">
+        <a class="navbar-brand" href="#">2Coin</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler2" aria-controls="navbarToggler2" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse " id="navbarToggler2">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item ">
+                    <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 border border-dark">
+                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="pills-prohome-tab" data-toggle="pill" href="#pills-prohome" role="tab" aria-controls="pills-prohome" aria-selected="true">Message</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" onclick="GetProfile()" role="tab" aria-controls="pills-profile" aria-selected="false">Account Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="pills-twofa-tab" data-toggle="pill" href="#pills-twofa" onclick="GetTwoFA()" role="tab" aria-controls="pills-twofa" aria-selected="false">2FA Management</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-prohome" role="tabpanel" aria-labelledby="pills-prohome-tab">
+                    Well come to Profile management
+                    </div>
+                    <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                        <div class="col" id="profile_res"> </div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-twofa" role="tabpanel" aria-labelledby="pills-twofa-tab">
+                        <div class="col" id="twofa_err"> </div>
+                        <div class="col" id="twofa_res"> </div>
+                        <input type="hidden" id="profile_addr">
+                        <div class="col">
+                            <h3 id="ERROR"> </h3>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <label id="profile_info_res"> </label>
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label class="col" id="twofa_number_res"> </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="col" id="QRshow"> </div>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <label id="profile_lb1">
+                                            Enable 2FA
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check checkbox-slider--b" type="checkbox" value=1 id="twofaCheck1" name="twofaCheck1">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        2FA : </td>
+                                    <td>
+                                        <input type="text" name="otpNum" id="otpNum" value="" style="width: 60px;">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Email Key :
+                                    </td>
+                                    <td>
+                                        <input type="email" name="twoemailkey" id="twoemailkey" value="" sise="20">
+                                        <input type="hidden" name="pointer" id="pointer" value="profile">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Login Password : </td>
+                                    <td>
+                                        <input type="password" name="ULpass" id="ULpass" value="" sise="20">
+                                    </td>
+                                </tr>
+                            </table>
+                            <div>
+                                <button onclick="Setotp()"> Enter </button>
+                            </div>
+                        </div>
+                        <!-- Coinfill form -->
+                    </div>
+                </div>
+                <!--  content   -->
+            </div>
+        </div>
+        <!--Sub  Menu bar -->
+    </div>
+    <!-- Main col -->
+    </div>
+    <!-- Main  Row   -->
+    </div>
+    <!-- Main Containner -->
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+    <!-- Response function -->
+    <script src="/js/keyboard.js"></script>
+    <script src="/js/inc_pf.js"></script>
+</body>
+
+</html>
