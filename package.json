@@ -38,7 +38,6 @@
     "node-recaptcha2": "^2.1.2",
     "npm": "^6.1.0",
     "promise": "^8.0.1",
-    "qr-image": "^3.2.0",
     "qrcode": "^1.2.0",
     "swarm-js": "^0.1.37",
     "tar": "^4.4.0",

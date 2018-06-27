@@ -40,7 +40,7 @@ var mathFunc = require('./lib/mathFunc'); // load function under mongDB.js
 function checkAuth(req, res, next) {
     console.log('checkAuth ' + req.url);
     if (req.url === '/' && (!req.session || !req.session.authenticated)) {
-        console.log('UN checkAuth ===>' + req.url);
+        //console.log('UN checkAuth ===>' + req.url);
         res.sendFile(__dirname + '/pubhtml/Guest.html', { status: 403 });
         // res.sendFile(__dirname + '/pubhtml/guest.html', { status: 403 });
         return;
@@ -143,14 +143,14 @@ webserver.get('/profile', (req, res, next) => {
 
 })
 webserver.get('/otpauth', (req, Qres, next) => {
- 
-    if (!req.session.authenticated || !req.session) { Qres.send(TXTdata.profile.relogin); return };
 
-    var inUsername = req.session.userid;
+    // if (!req.session.authenticated || !req.session) { Qres.send(TXTdata.profile.relogin); return };
+
+    var inUid = req.session.userid;
     //console.log("======> One Time Password")
     if (req.query.get === "order") {
         // Qres.send("you get order");
-        DBresp.data.findTwoFA(inUsername, function(err, data) {
+        DBresp.data.findTwoFA(inUid, function(err, data) {
             //console.log( " OTP data  : " + data) 
 
 
@@ -164,13 +164,17 @@ webserver.get('/otpauth', (req, Qres, next) => {
                 TXTdata.profile.display.twofa_number_res = data.twoFA.replace(/\s+/g, '').toUpperCase();
                 TXTdata.profile.display.QRshow = config.qrcodeURL.head + qrimg + config.qrcodeURL.tail;
                 TXTdata.profile.display.profile_info_res = "Email :  " + data.email;
+                TXTdata.profile.display.twofaEnable  =  data.twofaEnable ; 
+                console.log (" data.twofaEnable : " + data.twofaEnable ) ; 
                 Qres.send(TXTdata.profile.display);
                 return;
             } else {
+                console.log (" data.twofaEnable : " + data.twofaEnable ) ;
+                TXTdata.profile.hidden2fa.twofaEnable = data.twofaEnable ; 
                 Qres.send(TXTdata.profile.hidden2fa);
                 return;
             }
-            console.log(JSON.stringify(TXTdata.profile.display, null, '\t'));
+         //   console.log(JSON.stringify(TXTdata.profile.display, null, '\t'));
 
 
         });
@@ -180,28 +184,40 @@ webserver.get('/otpauth', (req, Qres, next) => {
         var getEnable2fa = req.query.enable2fa;
         var otpNum = req.query.otpNum;
 
-        if (getEnable2fa == 1 ) {
-            DBresp.data.findTwoFA(inUsername, function(err, data) {
+        if (getEnable2fa == "on") {
+            DBresp.data.findTwoFA(inUid, function(err, data) {
                 if (err) return;
-                const valided = otp.twoFA.verify(data.twoFA, otpNum);
-                console.log("Validete + " + data.twoFA + "  Valdate : " + valided  );
-                if ( valided === true  ){
-              
-                DBresp.data.EnableTwoFA(inUsername, function(err, res) {
-                    console.log ( "Result : " + res ) ;
-                    if (err) {
-                       // onsole.log("Validete Error + " + err  )
-                        Qres.send(TXTdata.profile.enableerror);
-                        return;
-                    } else {
-                        Qres.send(TXTdata.profile.EnableOK);
-                        return;
-                    }
-                });
-                Qres.send(TXTdata.profile.EnableOK);
-                } else {
+                var valided = otp.twoFA.verify(data.twoFA, otpNum);
+                // valided = true ;
+                //    console.log("Validete + " + data.twoFA + "  Valdate : " + valided  );
+                if (valided === true &&  data.twofaEnable != true ) { 
+
+                    DBresp.data.enableTwoFA(inUid, function(err, res) {
+                        // console.log ( " MMMMMMMM") ;
+                        // console.log ( "Result : " + res + "  " + err) ;
+                        if (err) {
+                            // onsole.log("Validete Error + " + err  )
+                            Qres.send(TXTdata.profile.enableDBerr);s
+                            return;
+                        } else {
+                            TXTdata.profile.EnableOK.twofaEnable = true ; 
+                            Qres.send(TXTdata.profile.EnableOK);
+                            return;
+                        }
+                    });
+                    //Qres.send(TXTdata.profile.EnableOK);
+                } else if (valided === true &&  data.twofaEnable === true){
+                        TXTdata.profile.hidden2fa.ERROR = '<div class="col" > 2FA already Enable !!! if you want disable contact support team </div>' ;  
+                        //console.log(JSON.stringify( TXTdata.profile , null,'\t' ) )
+                        Qres.send(TXTdata.profile.hidden2fa);
+                        return ;
+                }else if (valided != true &&  data.twofaEnable === true) {
+                        TXTdata.profile.hidden2fa.ERROR = '<div class="col" > 2FA has concern about security cannot change status or if you want to help please contact support </div>' ;  
+                        //console.log(JSON.stringify( TXTdata.profile , null,'\t' ) )
+                        Qres.send(TXTdata.profile.hidden2fa);
+                }else {
                     Qres.send(TXTdata.profile.enableerror);
-                    return ;
+                    return;
                 }
             });
 
@@ -242,7 +258,7 @@ webserver.post('/account', (logreq, res, next) => {
             // res.send('Recaptcha response valid. OK success');
             recaptCha_stat = true;
             console.log("Captcha success");
-           // console.log(" BODY  " + JSON.stringify(logreq.body, null, '\t'));
+            // console.log(" BODY  " + JSON.stringify(logreq.body, null, '\t'));
             if (logreq.body.username) inUsername = logreq.body.username.toLowerCase();
 
             DBresp.data.Regchkpass(inUsername, function(err, data) {

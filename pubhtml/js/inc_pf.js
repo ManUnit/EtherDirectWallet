@@ -5,9 +5,12 @@ function Setotp() {
             var qdata_res = JSON.parse(this.responseText);
             if (qdata_res.QRshow) document.getElementById("QRshow").innerHTML = qdata_res.QRshow;
             if (qdata_res.twofa_number_res) document.getElementById("twofa_number_res").innerHTML = qdata_res.twofa_number_res;
-            if (qdata_res.twofa_number_res) document.getElementById("profile_info_res").innerHTML = qdata_res.profile_info_res;
+            if (qdata_res.profile_info_res) document.getElementById("profile_info_res").innerHTML = qdata_res.profile_info_res;
             if (qdata_res.ERROR) document.getElementById("ERROR").innerHTML = qdata_res.ERROR;
-
+            if (qdata_res.twofaEnable == true) {
+                document.getElementById("twofaCheck1").disabled = true;
+                document.getElementById("twofaCheck1").checked = true;
+            }
         }
     };
     var order2fa = document.getElementById("twofaCheck1");
@@ -29,7 +32,11 @@ function GetTwoFA() {
             if (qdata_res.QRshow) document.getElementById("QRshow").innerHTML = qdata_res.QRshow; //QRID_id
             if (qdata_res.twofa_number_res) document.getElementById("twofa_number_res").innerHTML = qdata_res.twofa_number_res;
             if (qdata_res.profile_info_res) document.getElementById("profile_info_res").innerHTML = qdata_res.profile_info_res;
-            if (qdata_res.ERROR) document.getElementById("ERROR").innerHTML = qdata_res.ERROR;
+            if (qdata_res.ERROR) document.getElementById("ERROR").innerHTML = qdata_res.ERROR ;
+            if (qdata_res.twofaEnable == true) {
+                document.getElementById("twofaCheck1").disabled = true;
+                document.getElementById("twofaCheck1").checked = true;
+            }
         }
     };
     var order2fa = document.getElementById("twofaCheck1");
