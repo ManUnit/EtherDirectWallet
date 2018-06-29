@@ -1,0 +1,13 @@
+    a {
+        color: hotpink;
+    }
+
+    li:hover {
+        background-color: #fafafa;
+    }
+
+    .table-hover>tbody>tr:hover>td,
+    .table-hover>tbody>tr:hover>th {
+        background-color: #ffeeaa;
+        color: #333333;
+    }

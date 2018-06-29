@@ -164,17 +164,17 @@ webserver.get('/otpauth', (req, Qres, next) => {
                 TXTdata.profile.display.twofa_number_res = data.twoFA.replace(/\s+/g, '').toUpperCase();
                 TXTdata.profile.display.QRshow = config.qrcodeURL.head + qrimg + config.qrcodeURL.tail;
                 TXTdata.profile.display.profile_info_res = "Email :  " + data.email;
-                TXTdata.profile.display.twofaEnable  =  data.twofaEnable ; 
-                console.log (" data.twofaEnable : " + data.twofaEnable ) ; 
+                TXTdata.profile.display.twofaEnable = data.twofaEnable;
+                console.log(" data.twofaEnable : " + data.twofaEnable);
                 Qres.send(TXTdata.profile.display);
                 return;
             } else {
-                console.log (" data.twofaEnable : " + data.twofaEnable ) ;
-                TXTdata.profile.hidden2fa.twofaEnable = data.twofaEnable ; 
+                console.log(" data.twofaEnable : " + data.twofaEnable);
+                TXTdata.profile.hidden2fa.twofaEnable = data.twofaEnable;
                 Qres.send(TXTdata.profile.hidden2fa);
                 return;
             }
-         //   console.log(JSON.stringify(TXTdata.profile.display, null, '\t'));
+            //   console.log(JSON.stringify(TXTdata.profile.display, null, '\t'));
 
 
         });
@@ -190,32 +190,33 @@ webserver.get('/otpauth', (req, Qres, next) => {
                 var valided = otp.twoFA.verify(data.twoFA, otpNum);
                 // valided = true ;
                 //    console.log("Validete + " + data.twoFA + "  Valdate : " + valided  );
-                if (valided === true &&  data.twofaEnable != true ) { 
+                if (valided === true && data.twofaEnable != true) {
 
                     DBresp.data.enableTwoFA(inUid, function(err, res) {
                         // console.log ( " MMMMMMMM") ;
                         // console.log ( "Result : " + res + "  " + err) ;
                         if (err) {
                             // onsole.log("Validete Error + " + err  )
-                            Qres.send(TXTdata.profile.enableDBerr);s
+                            Qres.send(TXTdata.profile.enableDBerr);
+                            s
                             return;
                         } else {
-                            TXTdata.profile.EnableOK.twofaEnable = true ; 
+                            TXTdata.profile.EnableOK.twofaEnable = true;
                             Qres.send(TXTdata.profile.EnableOK);
                             return;
                         }
                     });
                     //Qres.send(TXTdata.profile.EnableOK);
-                } else if (valided === true &&  data.twofaEnable === true){
-                        TXTdata.profile.hidden2fa.ERROR = '<div class="col" > 2FA already Enable !!! if you want disable contact support team </div>' ;  
-                        //console.log(JSON.stringify( TXTdata.profile , null,'\t' ) )
-                        Qres.send(TXTdata.profile.hidden2fa);
-                        return ;
-                }else if (valided != true &&  data.twofaEnable === true) {
-                        TXTdata.profile.hidden2fa.ERROR = '<div class="col" > 2FA has concern about security cannot change status or if you want to help please contact support </div>' ;  
-                        //console.log(JSON.stringify( TXTdata.profile , null,'\t' ) )
-                        Qres.send(TXTdata.profile.hidden2fa);
-                }else {
+                } else if (valided === true && data.twofaEnable === true) {
+                    TXTdata.profile.hidden2fa.ERROR = '<div class="col" > 2FA already Enable !!! if you want disable contact support team </div>';
+                    //console.log(JSON.stringify( TXTdata.profile , null,'\t' ) )
+                    Qres.send(TXTdata.profile.hidden2fa);
+                    return;
+                } else if (valided != true && data.twofaEnable === true) {
+                    TXTdata.profile.hidden2fa.ERROR = '<div class="col" > 2FA has concern about security cannot change status or if you want to help please contact support </div>';
+                    //console.log(JSON.stringify( TXTdata.profile , null,'\t' ) )
+                    Qres.send(TXTdata.profile.hidden2fa);
+                } else {
                     Qres.send(TXTdata.profile.enableerror);
                     return;
                 }
@@ -249,9 +250,11 @@ webserver.post('/account', (logreq, res, next) => {
         remoteip: logreq.connection.remoteAddress,
         response: logreq.body['g-recaptcha-response']
     };
-
+    // Input2FA
     var recaptcha = new Recaptcha(config.recaptcha.SiteKey,
         config.recaptcha.SecretKey, data);
+
+               ;
 
     recaptcha.verify(function(success, error_code) {
         if (success) {
@@ -270,28 +273,67 @@ webserver.post('/account', (logreq, res, next) => {
                     data.answer.stat === "found" &&
                     data.answer.error === null &&
                     recaptCha_stat === true
-
                 ) {
-                    logreq.session.authenticated = true;
-                    logreq.session.objid = data.answer.objid;
-                    logreq.session.userid = data.answer.userid;
-                    logreq.session.username = data.answer.userlogin;
-                    // Checking another session
-                    // findSesion
-                    var x = "";
-                    var unixtime = Math.round((new Date()).getTime() / 1);;
-                    // console.log ( " Unix time : " + unixtime ) ;
-                    //DBinfo  insertSession =  function ( userId , sess ,unixtime , ipaddress , SSdata )
-                    DBresp.data.insertSession(
-                        data.answer.userid,
-                        logreq.session.id,
-                        unixtime,
-                        logreq.connection.remoteAddress,
-                        function(err, ssData) {
 
-                        }) //
-                    res.redirect('/');
-                    return true;
+                    DBresp.data.findTwoFA(data.answer.userid, function(err, TFAdata) {
+                        console.log(" Enable 2FA data : " + data.answer.enaTFA)
+                        if (data.answer.enaTFA == false) {
+                            logreq.session.authenticated = true;
+                            logreq.session.objid = data.answer.objid;
+                            logreq.session.userid = data.answer.userid;
+                            logreq.session.username = data.answer.userlogin;
+
+                            // Checking another session
+                            // findSesion
+
+                            var x = "";
+                            var unixtime = Math.round((new Date()).getTime() / 1);;
+                            // console.log ( " Unix time : " + unixtime ) ;
+                            //DBinfo  insertSession =  function ( userId , sess ,unixtime , ipaddress , SSdata )
+                            DBresp.data.insertSession(
+                                data.answer.userid,
+                                logreq.session.id,
+                                unixtime,
+                                logreq.connection.remoteAddress,
+                                function(err, ssData) {
+
+                                }) //
+                            res.redirect('/');
+                            return true;
+                        } else if (data.answer.enaTFA == true) {
+                            var valided = otp.twoFA.verify(TFAdata.twoFA, logreq.body.Input2FA );
+                            console.log ( TFAdata.twoFA + " VALIDATE login : " + valided )
+                            if ( valided === true) {
+                                logreq.session.authenticated = true;
+                                logreq.session.objid = data.answer.objid;
+                                logreq.session.userid = data.answer.userid;
+                                logreq.session.username = data.answer.userlogin;
+
+                                // Checking another session
+                                // findSesion
+
+                                var x = "";
+                                var unixtime = Math.round((new Date()).getTime() / 1);;
+                                // console.log ( " Unix time : " + unixtime ) ;
+                                //DBinfo  insertSession =  function ( userId , sess ,unixtime , ipaddress , SSdata )
+                                DBresp.data.insertSession(
+                                    data.answer.userid,
+                                    logreq.session.id,
+                                    unixtime,
+                                    logreq.connection.remoteAddress,
+                                    function(err, ssData) {
+
+                                    }) //
+                                res.redirect('/');
+                                return true ;
+                            } else {
+                             res.sendFile(__dirname + '/errhtml/loginfail.html');
+                            }
+
+                        }
+
+                    }); // READ  2FA 
+
                 } else {
                     // logreq.session.authenticated = false;
                     //logreq.flash('error', 'Username and password are incorrect');
@@ -309,9 +351,7 @@ webserver.post('/account', (logreq, res, next) => {
             res.sendFile(__dirname + '/errhtml/loginfail.html');
             return;
         }
-    });
-
-
+    }); // recaptcha
 }); //
 
 

@@ -16,9 +16,11 @@
     li:hover {
         background-color: #fafafa;
     }
-    .table-hover>tbody>tr:hover>td, .table-hover>tbody>tr:hover>th {
-	      background-color: #ffeeaa;
-		        color:#333333;
+
+    .table-hover>tbody>tr:hover>td,
+    .table-hover>tbody>tr:hover>th {
+        background-color: #ffeeaa;
+        color: #333333;
     }
     </style>
 </head>
@@ -99,6 +101,18 @@
                                 </tr>
                                 <tr>
                                     <td>
+                                        <label for="Input2FA">2FA</label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="form-group">
+                                            <input type="number" name="coInput2FA" class="form-control" id="coInput2FA" placeholder="2FA number" style="width: 120px;">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
                                         Sender Password : </td>
                                     <td>
                                         <input type="password" name="ULpass" id="ULpass" value="" sise="20">
@@ -118,29 +132,53 @@
                         <input type="hidden" class="col" id="asset_contract" value="0x0">
                         <label id="token_asset_res"> </label>
                         <label id="transac_asset_res"> </label>
-                         <table>
-		            <tr><td>
-                            <label id="asset_label_rx"   >Receiver Address :</label>
-			    </td><tr>
-		            <tr><td>
-                            <input type="text" id="assetReceiver" style="width: 400px;"  >
-			    </td></tr>
-		            <tr><td>
-                            <label id="asset_label_amount"   > Amount token : </label>
-			    </td></tr>
-		             <tr><td>
-                            <input type="text" id="assetAmount" onkeypress='validate(event)'  >
-			    </td></tr>
-		            <tr><td>
-                            <label id="asset_label_password">Login Password : </label>
-			    </td></tr>
-		            <tr><td>
-                            <input type="password" id="accountParse">
-			    </td></tr>
-		            <tr><td>
-                            <button onclick="SendAsset()">Send Tokens</button>
-			    </td></tr>
-                         </table>
+                        <table>
+                            <tr>
+                                <td>
+                                    <label id="asset_label_rx">Receiver Address :</label>
+                                </td>
+                                <tr>
+                                    <tr>
+                                        <td>
+                                            <input type="text" id="assetReceiver" style="width: 400px;">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label id="asset_label_amount"> Amount token : </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input type="text" id="assetAmount" onkeypress='validate(event)'>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label for="Input2FA">2FA</label>
+                                        </td>
+                                        <td>
+                                            <div class="form-group">
+                                                <input type="number" name="asInput2FA" class="form-control" id="asInput2FA" placeholder="2FA number" style="width: 120px;">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label id="asset_label_password">Login Password : </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input type="password" id="accountParse">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <button onclick="SendAsset()">Send Tokens</button>
+                                        </td>
+                                    </tr>
+                        </table>
                     </div>
                     <div class="tab-pane fade " id="pills-transac" role="tabpanel" aria-labelledby="pills-transac-tab">
                         <div class="col" id="transac_res"> TTTTTT </div>

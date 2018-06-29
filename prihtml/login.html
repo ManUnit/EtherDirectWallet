@@ -40,10 +40,10 @@
             </form>
         </div>
     </nav>
-    <div style="margin-left:10px;" >
-       <section class="row">
+    <div style="margin-left:10px;">
+        <section class="row">
             <section class="col-12 col-sm-4 col-md-3">
-                <form method='post'  action="/account">
+                <form method='post' action="/account">
                     <div class="form-group">
                         <label for="InputUname">Login</label>
                         <input type="text" name="username" class="form-control" id="InputEUname" aria-describedby="emailHelp " placeholder="User or Enter email ">
@@ -52,14 +52,17 @@
                         <label for="InputPassword1">Password</label>
                         <input type="password" name="password" class="form-control" id="InputPassword1" placeholder="Password">
                     </div>
-                    <div class="col" id="cha_res" > </div>
+                    <div class="form-group">
+                        <label for="Input2FA">2FA</label>
+                        <input type="number" name="Input2FA" class="form-control" id="Input2FA" placeholder="2FA number" style="width: 120px;" >
+                    </div>
+                    <div class="col" id="cha_res"> </div>
                     <div class="g-recaptcha" data-sitekey="6LfjdWAUAAAAAFX2rMfT_LrXj9ZJScmaymQCSEsj"></div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </section>
         </section>
-     </div>
-
+    </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
