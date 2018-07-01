@@ -3,7 +3,6 @@ lib/_sendtest.js
 lib/_approve.js
 lib/_ctest.js
 lib/_SendETH-01.js
-lib/_*.*
 lib/_createacc.js
 lib/_smart2.js
 lib/_smartContract-03.js
