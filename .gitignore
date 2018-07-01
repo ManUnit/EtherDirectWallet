@@ -1,4 +1,5 @@
 node_modules/
+lib/_*.js
 lib/_sendtest.js
 lib/_approve.js
 lib/_ctest.js
@@ -9,4 +10,5 @@ lib/_smartContract-03.js
 lib/_smartcontract.js
 lib/_test.js
 lib/_token1.js
+
 
