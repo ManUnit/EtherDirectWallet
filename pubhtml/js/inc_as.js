@@ -33,6 +33,8 @@ function SendAsset() {
     var asset_contract = document.getElementById("asset_contract").value;
     var assetAmount = document.getElementById("assetAmount").value;
     var accountParse = document.getElementById("accountParse").value;
+    var asInput2FA = document.getElementById("asInput2FA").value ; 
+
     document.getElementById("assetReceiver").value = '' ;
     document.getElementById("assetAmount").value = '' ;
     document.getElementById("accountParse").value = '' ;
@@ -47,6 +49,7 @@ function SendAsset() {
                     "&receiverAddress=" + rxAddress +
                     "&assetAmount=" +  assetAmount +
                     "&pointer=" + "sendasset" +
+                    "&asInput2FA=" + asInput2FA +
                     "&sparse=" + accountParse , true);
     xhttp.send();
 } // 

@@ -103,11 +103,9 @@
                                     <td>
                                         <label for="Input2FA">2FA</label>
                                     </td>
-                                </tr>
-                                <tr>
                                     <td>
                                         <div class="form-group">
-                                            <input type="number" name="coInput2FA" class="form-control" id="coInput2FA" placeholder="2FA number" style="width: 120px;">
+                                            <input maxlength="6" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"  type="number" name="coInput2FA" class="form-control" id="coInput2FA" placeholder="2FA number" style="width: 120px;" >
                                         </div>
                                     </td>
                                 </tr>
@@ -118,10 +116,14 @@
                                         <input type="password" name="ULpass" id="ULpass" value="" sise="20">
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td>
+                                    </td>
+                                    <td>
+                                        <button onclick="SendCoins()"> Enter </button>
+                                    </td>
+                                </tr>
                             </table>
-                            <div>
-                                <button onclick="SendCoins()"> Enter </button>
-                            </div>
                         </div>
                         <!-- Coinfill form -->
                     </div>
@@ -157,9 +159,11 @@
                                         <td>
                                             <label for="Input2FA">2FA</label>
                                         </td>
+                                    </tr>
+                                    <tr>
                                         <td>
                                             <div class="form-group">
-                                                <input type="number" name="asInput2FA" class="form-control" id="asInput2FA" placeholder="2FA number" style="width: 120px;">
+                                                <input maxlength="6"   type="number" name="asInput2FA" class="form-control" id="asInput2FA" placeholder="2FA number" style="width: 120px;" onKeyPress="if(this.value.length==7) return false;"  >
                                             </div>
                                         </td>
                                     </tr>
@@ -181,7 +185,7 @@
                         </table>
                     </div>
                     <div class="tab-pane fade " id="pills-transac" role="tabpanel" aria-labelledby="pills-transac-tab">
-                        <div class="col" id="transac_res"> TTTTTT </div>
+                        <div class="col" id="transac_res"> ..... </div>
                     </div>
                 </div>
                 <!--  content   -->

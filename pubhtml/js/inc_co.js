@@ -15,6 +15,7 @@ function GetCoins() {
     var senderAddress = document.getElementById("coins_addr").value;
     var SENDERpass = document.getElementById("ULpass").value;
 
+
     document.getElementById("amount_text").innerHTML = "Amount : " + TXamt ;
     document.getElementById("asset_res").innerHTML = 'Connection Blockchain !!! click again '  ;
     document.getElementById("amount").value = '' ;
@@ -46,16 +47,19 @@ function SendCoins() {
     var senderAddress = document.getElementById("coins_addr").value;
     var receiverAddress = document.getElementById("receiverAddress").value;
     var SENDERpass = document.getElementById("ULpass").value;
+    var coInput2FA = document.getElementById("coInput2FA").value ; 
 
     document.getElementById("amount_text").innerHTML = "Amount : " + TXamt ;
     document.getElementById("asset_res").innerHTML = 'Connection Blockchain !!! click again '  ;
     document.getElementById("amount").value = '' ;
     document.getElementById("receiverAddress").value = '' ;
     document.getElementById("ULpass").value = '' ;
+    document.getElementById("coInput2FA").value = '' ;
 
     xhttp.open("GET", "/dextransfer?amount="+ TXamt +
                     "&senderAddress=" + senderAddress +
-                    "&pointer=coinsview"  +
+                    "&pointer=coinsview"  +  
+                    "&coInput2FA=" + coInput2FA + 
                     "&receiverAddress=" + receiverAddress +
                     "&sendparse=" + SENDERpass , true);
     xhttp.send();

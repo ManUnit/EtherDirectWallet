@@ -2,7 +2,7 @@
 
 use admin
 db.createUser( { user: "root",
-          pwd: "<password>",
+          pwd: "richly",
           roles: [ "userAdminAnyDatabase",
                    "dbAdminAnyDatabase",
                    "readWriteAnyDatabase"

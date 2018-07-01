@@ -54,7 +54,7 @@
                     </div>
                     <div class="form-group">
                         <label for="Input2FA">2FA</label>
-                        <input type="number" name="Input2FA" class="form-control" id="Input2FA" placeholder="2FA number" style="width: 120px;" >
+                        <input maxlength="6" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" type="number" name="Input2FA" class="form-control" id="Input2FA" placeholder="2FA number" style="width: 120px;" >
                     </div>
                     <div class="col" id="cha_res"> </div>
                     <div class="g-recaptcha" data-sitekey="6LfjdWAUAAAAAFX2rMfT_LrXj9ZJScmaymQCSEsj"></div>

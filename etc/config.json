@@ -1,9 +1,9 @@
 {
     "Version": "1.0.1M",
     "Revision": "19",
-    "RPCSVR": "127.0.0.1",
-    "TKRPCSVR": "127.0.0.1",
-    "RPCPORT": "8545",
+    "RPCSVR": "202.151.178.21",
+    "TKRPCSVR": "202.151.178.21",
+    "RPCPORT": "58546",
     "WEBPORT": "4000",
     "ExpolrerSvr":
     {
@@ -12,8 +12,8 @@
     },
     "mongoDB":
     {
-        "user": "webdata",
-        "password": "webpass",
+        "user": "nodejs",
+        "password": "jeffrey",
         "serverIp": "127.0.0.1"
     },
     "recaptcha":

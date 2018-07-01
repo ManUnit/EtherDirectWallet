@@ -1,1 +1,4 @@
 node_modules/
+lib/_sendtest.js
+lib/_approve.js
+lib/_ctest.js
