@@ -120,6 +120,7 @@ var options = { server: { socketOptions: { keepAlive: 1 } } };
 console.log("Use RPC server]:" + config.RPCSVR + ":" + config.RPCPORT);
 
 web3.eth.getAccounts(function(err, res) {
+    console.log ( "=======Line122=======")
     console.log(err, res)
 })
 webserver.get('*' + '.html', (req, res, next) => {
@@ -318,14 +319,14 @@ webserver.post('/account', (logreq, res, next) => {
                                 var unixtime = Math.round((new Date()).getTime() / 1);;
                                 // console.log ( " Unix time : " + unixtime ) ;
                                 //DBinfo  insertSession =  function ( userId , sess ,unixtime , ipaddress , SSdata )
-                                if (!data.answer.firstLogin ) data.answer.firstLogin = false ; 
-                                console.log ( "First LOGIN :  " + data.answer.firstLogin  ) ; 
-                                if ( data.answer.firstLogin === true) {
-                                    console.log ( "Inside IF TRUE")
+                                if (!data.answer.firstLogin) data.answer.firstLogin = false;
+                                console.log("First LOGIN :  " + data.answer.firstLogin);
+                                if (data.answer.firstLogin === true) {
+                                    console.log("Inside IF TRUE")
 
                                     DBresp.data.insertAssets("jeffrey888", data.answer.userid, function(err, res) {
                                         if (err) return;
-                                        console.log("ADD Assets " + res) ; 
+                                        console.log("ADD Assets " + res);
                                     });
                                 }
 
@@ -760,16 +761,9 @@ webserver.get('/dextransfer', (req, WEBres) => {
     var rx_address = req.query.receiverAddress.trim();
     var sender_address = req.query.senderAddress.trim();
     var sender_pass = req.query.sendparse;
-    var TX_ac = sender_address;
-    var VALUE_ETH = tx_amonut;
-    var TX_WEI = VALUE_ETH * Math.pow(10, 18);
-    var TX_pass = sender_pass;
     var ADD_CHK_RES = '';
     var userid = req.session.userid;
     var coInput2FA = req.query.coInput2FA;
-
-
-
     // console.log("Pointer = " + pointer);
     //console.log ( "  CHECK Valid address : " + web3.utils.isAddress( rx_address  )  );
 
@@ -788,77 +782,62 @@ webserver.get('/dextransfer', (req, WEBres) => {
 
     //  console.log('type of VALUE_ETH  ' + typeof VALUE_ETH + " Address :" + rx_address);
     //  console.log('Amount is : ' + tx_amonut + " Address :" + rx_address);
-    DBresp.data.findTwoFA(userid, function(err, TFAdata) {
-
-        var valided = otp.twoFA.verify(TFAdata.twoFA, coInput2FA);
-        if (valided == false) { WEBres.send({ "co_addr_res": '<h4 style="color:red;"> 2FA  failed </h4> ' }); return false };
-
-        web3.eth.personal.unlockAccount(TX_ac, TX_pass, 200, function(unLockerror, Unlocked_resp) {
-            if (unLockerror) {
-                console.log(" Unlock has error is :  " + unLockerror);
-                WEBres.send({ "co_addr_res": " Unlock Error is : " + unLockerror + " Please send again " });
-                web3.eth.personal.lockAccount(TX_ac);
-            } else {
-                // Handle after Unlock
-                //console.log("  " + Unlocked_resp)
-                //  Start send  //
-                web3.eth.sendTransaction({
-                    from: TX_ac,
-                    to: rx_address,
-                    gas: TokenCfg.sendcfg.gas, // 21000 wei
-                    gasPrice: TokenCfg.sendcfg.gasprice, // 1.8Gwei
-                    value: web3.utils.toWei(VALUE_ETH, "ether"),
-                }, function(err, transactionHash) {
-                    if (err) {
-                        console.log(err);
-                        WEBres.send({ "co_addr_res": "Send  Error " + err })
-                        web3.eth.personal.lockAccount(TX_ac);
-                    } else {
-                        web3.eth.personal.lockAccount(TX_ac);
-                        DBresp.data.coinsBalance(userid, function(beErr, Ba_res) {
-                            console.log(" CHK COIN NAME " + JSON.stringify(Ba_res, null, '\t'));
-                            var datetime = new Date(Date.now()).toLocaleString();;
-                            var ownerid = req.session.userid;
-                            var cryptoname = Ba_res[0].coinName;
-                            var txaddress = TX_ac;
-                            var rxaddress = rx_address;
-                            var value = tx_amonut; //
-                            var netfee = TokenCfg.sendcfg.netfee;
-                            var contract = ""; //
-                            var txhash = transactionHash; //
-                            var transactiondata = {}; //
-                            var massage = ""; //
-                            DBresp.data.insertTransac(datetime, ownerid, cryptoname, txaddress, rxaddress,
-                                value, netfee, contract, txhash, transactiondata, massage,
-                                function(err, tsac_res) {
-                                    if (err) { console.log(" Insert transecton Error : " + err); return false };
-                                });
-
-
-                            WEBres.send({
-                                "co_addr_res": "Transaction " + " TxID : <a href=http://" +
-                                    config.ExpolrerSvr.ip + ":" + config.ExpolrerSvr.port + "/tx/" +
-                                    transactionHash + ">" + transactionHash + "</a>"
+    DBresp.data.idChkPass(userid, function(err, chkres) {
+        // console.log(JSON.stringify(chkres, null, '\t'))
+        if (chkres.answer.password != sender_pass) {
+            WEBres.send({ "co_addr_res": '<h4 style="color:red;"> password failed </h4> ' });
+            return false;
+        } else if (chkres.answer.password === sender_pass) {
+            DBresp.data.PairChkCoins(userid, sender_address,
+                function(err, tokenDatas) {
+                    console.log("  Private key : " + tokenDatas[0].cryptkey)
+                    console.log("=====TOKENDATA======>" + JSON.stringify(tokenDatas, null, '\t'));
+                    DBresp.data.findTwoFA(userid, function(err, TFAdata) {
+                        var valided = otp.twoFA.verify(TFAdata.twoFA, coInput2FA);
+                        if (valided == false) { WEBres.send({ "co_addr_res": '<h4 style="color:red;"> 2FA  failed </h4> ' }); return false };
+                        coinFunc.coinbase.SignedSendCoin(sender_address,
+                            rx_address,
+                            tokenDatas[0].cryptkey,
+                            tx_amonut,
+                            function(err, Cres) {
+                                if (Cres) console.log(" Send OUTPUT : ===>  " + JSON.stringify(Cres, null, '\t'));
+                                if (Cres) {
+                                    var txhash = Cres.transactionHash; //
+                                    console.log("ooooooooooooooo>>>>" + txhash);
+                                    WEBres.send({
+                                        "co_addr_res": "Transaction " + " TxID : <a href=http://" +
+                                            config.ExpolrerSvr.ip + ":" + config.ExpolrerSvr.port + "/tx/" +
+                                            txhash + ">" + txhash + "</a>"
+                                    });                              
+                                        console.log(" CHK COIN NAME " + JSON.stringify(tokenDatas, null, '\t'));
+                                        var datetime = new Date(Date.now()).toLocaleString();;
+                                        var ownerid = req.session.userid;
+                                        var cryptoname = tokenDatas[0].coinName;
+                                        var txaddress = sender_address;
+                                        var rxaddress = rx_address;
+                                        var value = tx_amonut; //
+                                        var netfee = TokenCfg.sendcfg.netfee;
+                                        var contract = ""; //
+                                        var txhash = Cres.transactionHash; //
+                                        var transactiondata = Cres; //
+                                        var massage = ""; //
+                                        DBresp.data.insertTransac(datetime, ownerid, cryptoname, txaddress, rxaddress,
+                                            value, netfee, contract, txhash, transactiondata, massage,
+                                            function(err, tsac_res) {
+                                                if (err) { console.log(" Insert transecton Error : " + err); return false };
+                                            });
+                                 
+                                } else {      
+                                    WEBres.send({ "co_addr_res": " Send Error " + err });
+                                    return false;
+                                };
                             });
+                    }); // 2 FA CHECK  
+                }); // Chek PRi 
+        } // 
+    })
+}); // END route 
 
-                            //  console.log("Transection ID:" + transactionHash);
-                            //  console.log("Locked A/C :" + TX_ac);
-                        }) //  END chk balance
-                    } // END ELSE IF
-                });
-
-                // END Send //
-            }
-        }); // web3 unlock
-
-
-
-    }); // 2 FA CHECK 
-
-
-}) // END
-/*
- */
 webserver.get('*', function(req, res) {
     res.setHeader('content-type', 'application/txt');
     res.status(404).send("What !!")

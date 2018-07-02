@@ -3,7 +3,7 @@
     "Revision": "19",
     "RPCSVR": "202.151.178.21",
     "TKRPCSVR": "202.151.178.21",
-    "RPCPORT": "58546",
+    "RPCPORT": "8545",
     "WEBPORT": "4000",
     "ExpolrerSvr":
     {
