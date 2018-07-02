@@ -290,6 +290,8 @@ webserver.post('/account', (logreq, res, next) => {
                             var unixtime = Math.round((new Date()).getTime() / 1);;
                             // console.log ( " Unix time : " + unixtime ) ;
                             //DBinfo  insertSession =  function ( userId , sess ,unixtime , ipaddress , SSdata )
+
+
                             DBresp.data.insertSession(
                                 data.answer.userid,
                                 logreq.session.id,
@@ -316,6 +318,17 @@ webserver.post('/account', (logreq, res, next) => {
                                 var unixtime = Math.round((new Date()).getTime() / 1);;
                                 // console.log ( " Unix time : " + unixtime ) ;
                                 //DBinfo  insertSession =  function ( userId , sess ,unixtime , ipaddress , SSdata )
+                                if (!data.answer.firstLogin ) data.answer.firstLogin = false ; 
+                                console.log ( "First LOGIN :  " + data.answer.firstLogin  ) ; 
+                                if ( data.answer.firstLogin === true) {
+                                    console.log ( "Inside IF TRUE")
+
+                                    DBresp.data.insertAssets("jeffrey888", data.answer.userid, function(err, res) {
+                                        if (err) return;
+                                        console.log("ADD Assets " + res) ; 
+                                    });
+                                }
+
                                 DBresp.data.insertSession(
                                     data.answer.userid,
                                     logreq.session.id,
@@ -324,6 +337,8 @@ webserver.post('/account', (logreq, res, next) => {
                                     function(err, ssData) {
 
                                     }) //
+
+
                                 res.redirect('/');
                                 return true;
                             } else {
@@ -414,11 +429,11 @@ webserver.post('/registor', (Rereq, Reres, next) => {
                     var birth = Rereq.body.birthdate;
                     var pass = Rereq.body.ftPassword;
                     var twoFA = otp.twoFA.genkey();
-                    var twofaEnable = false; 
-                    var firstLogin = true ; 
+                    var twofaEnable = false;
+                    var firstLogin = true;
 
                     // console.log("2FA========> " + twoFA)
-                    DBresp.data.insertReg(uname, fname, lname, email, birth, pass, twoFA, twofaEnable,firstLogin, function(err, dat) {
+                    DBresp.data.insertReg(uname, fname, lname, email, birth, pass, twoFA, twofaEnable, firstLogin, function(err, dat) {
                         //DBresp.data.insertLoginUser( uname,fname,lname,email,birth,pass,function(err, dat){
                         if (err) return false;
                         //   console.log(" RETURN INSERT " + dat);
@@ -562,7 +577,7 @@ webserver.get('/assetview', (req, res) => {
 }) // End Get
 
 webserver.get('/sendasset', function(req, web_res, next) {
-     // console.log("ASS DATA " + JSON.stringify(req.query, null, '\t'));
+    // console.log("ASS DATA " + JSON.stringify(req.query, null, '\t'));
     // console.log("SESSION DATA " + JSON.stringify(req.session, null, '\t'));
     if (!req.session.authenticated) {
         //console.log(" no authen at /sendasset  " + JSON.stringify(TXTdata.aslogin, null, '\t'));
@@ -575,7 +590,7 @@ webserver.get('/sendasset', function(req, web_res, next) {
     var SenderAddress = req.query.SenderAddress;
     var receiverAddress = req.query.receiverAddress.trim();
     var assetAmount = req.query.assetAmount;
-    var sparse = req.query.sparse; 
+    var sparse = req.query.sparse;
     var asInput2FA = req.query.asInput2FA;
     var x, txt = "";
     var jdata = [];
@@ -587,8 +602,8 @@ webserver.get('/sendasset', function(req, web_res, next) {
     };
     DBresp.data.findTwoFA(userid, function(err, TFAdata) {
         var valided = otp.twoFA.verify(TFAdata.twoFA, asInput2FA);
-        TXTdata.asAddrerr.ERROR = ' <h4 style="color:red;" > 2FA Error </h4>' ; 
-        if (valided == false ) {  web_res.send( TXTdata.asAddrerr );  return false } ;
+        TXTdata.asAddrerr.ERROR = ' <h4 style="color:red;" > 2FA Error </h4>';
+        if (valided == false) { web_res.send(TXTdata.asAddrerr); return false };
         DBresp.data.idChkPass(userid, function(psserr, pssdata) {
             //console.log( JSON.stringify(pssdata, null, '\t'));
             if (pssdata.answer.password === sparse) {
@@ -612,7 +627,7 @@ webserver.get('/sendasset', function(req, web_res, next) {
                             return
                         };
 
-                        coinFunc.coinbase.sendAsset( // do hard function
+                        coinFunc.coinbase.SignedSendAsset( // do hard function
                             SenderAddress,
                             receiverAddress,
                             resContract,
@@ -626,7 +641,7 @@ webserver.get('/sendasset', function(req, web_res, next) {
                                     return false;
                                 };
                                 if (res) {
-                                   // console.log(" Coin OUTPUT : \n\n\n\n\n" + "DONE ! TXiD  " + JSON.stringify(res, null, '\t'));
+                                    // console.log(" Coin OUTPUT : \n\n\n\n\n" + "DONE ! TXiD  " + JSON.stringify(res, null, '\t'));
                                     var datetime = new Date(Date.now()).toLocaleString();;
                                     var ownerid = userid;
                                     var cryptoname = tokenName;
