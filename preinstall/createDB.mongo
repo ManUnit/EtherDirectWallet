@@ -39,7 +39,14 @@ db.createUser(
     roles : [{"role":"nodeAccess","db":"accounts"}]
   }
  )
- 
+use admin
+db.updateUser(
+   "nodejs",
+   {
+      pwd: "<new Password>",
+      customData: { title: "Senior Manager" }
+   }
+)
  
  
  

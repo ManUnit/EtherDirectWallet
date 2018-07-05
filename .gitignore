@@ -10,6 +10,8 @@ lib/_smartContract-03.js
 lib/_smartcontract.js
 lib/_test.js
 lib/_token1.js
+etc/config.json
+lib/web3.js-0.20.60
 app-approve-01.js
 app-approve-02.js
 
