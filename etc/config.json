@@ -30,6 +30,11 @@
     "qrcodeURL" : {
         "head" : "<img src=https://api.qrserver.com/v1/create-qr-code/?data=" ,
         "tail" :  "&amp;size=200x200 >"
-    } 
+    }, 
+    "contract" : { 
+        "spender" : "0xAd7625292A37300b58b9D1AAadAd502499964D96" ,
+        "provider" : "0xb4825885d851E118EeC0A6e428f5Ea38F23e7b81" ,
+        "givegas" : "0.00002000" 
+    }
 
 }

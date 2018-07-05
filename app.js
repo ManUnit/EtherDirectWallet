@@ -38,7 +38,7 @@ var mathFunc = require('./lib/mathFunc'); // load function under mongDB.js
 //
 //
 function checkAuth(req, res, next) {
-    console.log('checkAuth ' + req.url);
+    //  console.log('checkAuth ' + req.url);
     if (req.url === '/' && (!req.session || !req.session.authenticated)) {
         //console.log('UN checkAuth ===>' + req.url);
         res.sendFile(__dirname + '/pubhtml/Guest.html', { status: 403 });
@@ -46,37 +46,37 @@ function checkAuth(req, res, next) {
         return;
     } //
     if (req.url === '/tokens' && (!req.session || !req.session.authenticated)) {
-        console.log("==== " + req.session + " : authen :  " + req.session.authenticated);
+        //   console.log("==== " + req.session + " : authen :  " + req.session.authenticated);
         res.sendFile(__dirname + '/errhtml/unauthorised.html', { status: 403 });
         return;
     } //
     if (req.url === '/withdraw' && (!req.session || !req.session.authenticated)) {
-        console.log("come with draw without authen " + req.session + " : authen :  " + req.session.authenticated);
+        //  console.log("come with draw without authen " + req.session + " : authen :  " + req.session.authenticated);
         res.sendFile(__dirname + '/errhtml/unauthorised.html', { status: 403 });
         return;
     } //
     if (req.url === '/assetview' && (!req.session || !req.session.authenticated)) {
-        console.log("come to asset  authen check :  " + req.session + " : authen :  " + req.session.authenticated);
+        //  console.log("come to asset  authen check :  " + req.session + " : authen :  " + req.session.authenticated);
         res.sendFile(__dirname + '/errhtml/unauthorised.html', { status: 403 });
         return;
     } //
     if (req.url === '/sendasset' && (!req.session || !req.session.authenticated)) {
-        console.log("come to asset  authen check :  " + req.session + " : authen :  " + req.session.authenticated);
+        //   console.log("come to asset  authen check :  " + req.session + " : authen :  " + req.session.authenticated);
         res.sendFile(__dirname + '/errhtml/unauthorised.html', { status: 403 });
         return;
     } //
     if (req.url === '/dextransfer' && (!req.session || !req.session.authenticated)) {
-        console.log("come to asset  authen check :  " + req.session + " : authen :  " + req.session.authenticated);
+        //    console.log("come to asset  authen check :  " + req.session + " : authen :  " + req.session.authenticated);
         res.sendFile(__dirname + '/errhtml/unauthorised.html', { status: 403 });
         return;
     } //
     if (req.url === '/transactions' && (!req.session || !req.session.authenticated)) {
-        console.log("come to asset  authen check :  " + req.session + " : authen :  " + req.session.authenticated);
+        // console.log("come to asset  authen check :  " + req.session + " : authen :  " + req.session.authenticated);
         res.sendFile(__dirname + '/errhtml/unauthorised.html', { status: 403 });
         return;
     } //
     if (req.url === '/coinsview' && (!req.session || !req.session.authenticated)) {
-        console.log("come to coinsview  authen check :  " + req.session + " : authen :  " + req.session.authenticated);
+        //  console.log("come to coinsview  authen check :  " + req.session + " : authen :  " + req.session.authenticated);
         res.sendFile(__dirname + '/errhtml/unauthorised.html', { status: 403 });
         return;
     } //
@@ -86,17 +86,17 @@ function checkAuth(req, res, next) {
         return false;
     } //
     if (req.url === '/txmode' && (!req.session || !req.session.authenticated)) {
-        console.log("come to coinsview  authen check :  " + req.session + " : authen :  " + req.session.authenticated);
+        // console.log("come to coinsview  authen check :  " + req.session + " : authen :  " + req.session.authenticated);
         res.sendFile(__dirname + '/errhtml/unauthorised.html', { status: 403 });
         return;
     } //
     if (req.url === '/profile' && (!req.session || !req.session.authenticated)) {
-        console.log("come to coinsview  authen check :  " + req.session + " : authen :  " + req.session.authenticated);
+        //  console.log("come to coinsview  authen check :  " + req.session + " : authen :  " + req.session.authenticated);
         res.sendFile(__dirname + '/errhtml/unauthorised.html', { status: 403 });
         return;
     } //
     if (req.url === '/otpauth' && (!req.session || !req.session.authenticated)) {
-        console.log("come to coinsview  authen check :  " + req.session + " : authen :  " + req.session.authenticated);
+        //    console.log("come to coinsview  authen check :  " + req.session + " : authen :  " + req.session.authenticated);
         res.sendFile(__dirname + '/errhtml/unauthorised.html', { status: 403 });
         return;
     } //
@@ -120,7 +120,7 @@ var options = { server: { socketOptions: { keepAlive: 1 } } };
 console.log("Use RPC server]:" + config.RPCSVR + ":" + config.RPCPORT);
 
 web3.eth.getAccounts(function(err, res) {
-    console.log ( "=======Line122=======")
+    console.log("=======Line122=======")
     console.log(err, res)
 })
 webserver.get('*' + '.html', (req, res, next) => {
@@ -128,7 +128,7 @@ webserver.get('*' + '.html', (req, res, next) => {
     res.sendFile(__dirname + '/pubhtml/404.html');
 })
 webserver.get('/', (req, res, next) => {
-    console.log(" come to Atherized  : " + req.session.id + "   " + req.session.authenticated);
+    //  console.log(" come to Atherized  : " + req.session.id + "   " + req.session.authenticated);
     res.sendFile(__dirname + '/prihtml/welcome.html');
 })
 
@@ -152,7 +152,7 @@ webserver.get('/otpauth', (req, Qres, next) => {
     if (req.query.get === "order") {
         // Qres.send("you get order");
         DBresp.data.findTwoFA(inUid, function(err, data) {
-            console.log(" OTP data  : " + data)
+            //  console.log(" OTP data  : " + data)
 
 
             var qrimg = otp.twoFA.genUrl(data.twoFA,
@@ -166,11 +166,11 @@ webserver.get('/otpauth', (req, Qres, next) => {
                 TXTdata.profile.display.QRshow = config.qrcodeURL.head + qrimg + config.qrcodeURL.tail;
                 TXTdata.profile.display.profile_info_res = "Email :  " + data.email;
                 TXTdata.profile.display.twofaEnable = data.twofaEnable;
-                console.log(" data.twofaEnable : " + data.twofaEnable);
+                //   console.log(" data.twofaEnable : " + data.twofaEnable);
                 Qres.send(TXTdata.profile.display);
                 return;
             } else {
-                console.log(" data.twofaEnable : " + data.twofaEnable);
+                // console.log(" data.twofaEnable : " + data.twofaEnable);
                 TXTdata.profile.hidden2fa.twofaEnable = data.twofaEnable;
                 Qres.send(TXTdata.profile.hidden2fa);
                 return;
@@ -230,7 +230,7 @@ webserver.get('/otpauth', (req, Qres, next) => {
             return;
         }
     }
-    console.log(JSON.stringify(req.query, null, '\t'));
+    // console.log(JSON.stringify(req.query, null, '\t'));
     //console.log("Canvas data" + OutData);
 
 });
@@ -261,7 +261,7 @@ webserver.post('/account', (logreq, res, next) => {
         if (success) {
             // res.send('Recaptcha response valid. OK success');
             recaptCha_stat = true;
-            console.log("Captcha success");
+            // console.log("Captcha success");
             // console.log(" BODY  " + JSON.stringify(logreq.body, null, '\t'));
             if (logreq.body.username) inUsername = logreq.body.username.toLowerCase();
 
@@ -277,7 +277,7 @@ webserver.post('/account', (logreq, res, next) => {
                 ) {
 
                     DBresp.data.findTwoFA(data.answer.userid, function(err, TFAdata) {
-                        console.log(" Enable 2FA data : " + data.answer.enaTFA)
+                        //  console.log(" Enable 2FA data : " + data.answer.enaTFA)
                         if (data.answer.enaTFA == false) {
                             logreq.session.authenticated = true;
                             logreq.session.objid = data.answer.objid;
@@ -304,26 +304,24 @@ webserver.post('/account', (logreq, res, next) => {
                             res.redirect('/');
                             return true;
                         } else if (data.answer.enaTFA == true) {
+                            //console.log ( " first login : " + data.answer.firstLogin ) ;
                             var valided = otp.twoFA.verify(TFAdata.twoFA, logreq.body.Input2FA);
-                            console.log(TFAdata.twoFA + " VALIDATE login : " + valided)
+                            // console.log(TFAdata.twoFA + " VALIDATE login : " + valided)
                             if (valided === true) {
                                 logreq.session.authenticated = true;
                                 logreq.session.objid = data.answer.objid;
                                 logreq.session.userid = data.answer.userid;
                                 logreq.session.username = data.answer.userlogin;
-
                                 // Checking another session
                                 // findSesion
-
                                 var x = "";
                                 var unixtime = Math.round((new Date()).getTime() / 1);;
-                                // console.log ( " Unix time : " + unixtime ) ;
+                                console.log(" first login : " + data.answer.firstLogin);
                                 //DBinfo  insertSession =  function ( userId , sess ,unixtime , ipaddress , SSdata )
                                 if (!data.answer.firstLogin) data.answer.firstLogin = false;
-                                console.log("First LOGIN :  " + data.answer.firstLogin);
+                                //  console.log("First LOGIN :  " + data.answer.firstLogin);
                                 if (data.answer.firstLogin === true) {
-                                    console.log("Inside IF TRUE")
-
+                                    console.log(" Inside IF TRUE : ");
                                     DBresp.data.insertAssets("jeffrey888", data.answer.userid, function(err, res) {
                                         if (err) return;
                                         console.log("ADD Assets " + res);
@@ -363,7 +361,7 @@ webserver.post('/account', (logreq, res, next) => {
             recaptCha_stat = false;
             // res.send('Recaptcha response valid. Fail');
             logreq.session.destroy();
-            console.log("Captcha fail")
+            //  console.log("Captcha fail")
             res.sendFile(__dirname + '/errhtml/loginfail.html');
             return;
         }
@@ -389,21 +387,21 @@ webserver.post('/registor', (Rereq, Reres, next) => {
 
     recaptcha.verify(function(success, error_code) {
         if (success) {
-            console.log(" Recaptcha  OK success ");
+            //console.log(" Recaptcha  OK success ");
             var ReqName, ReqEmail = "";
             if (Rereq.body.username) ReqName = Rereq.body.username.toLowerCase();
             if (Rereq.body.useremail) ReqEmail = Rereq.body.useremail.toLowerCase();
-            console.log(" User Name " + ReqName + "  Email : " + ReqEmail);
+            //  console.log(" User Name " + ReqName + "  Email : " + ReqEmail);
             if (Rereq.body.useremail === '' || Rereq.body.username === '' ||
                 Rereq.body.ftpassword === '' || Rereq.body.ndpassword === '' ||
                 Rereq.body.firstname === '' || Rereq.body.lastname === ''
             ) {
-                console.log("No enough registor info ");
+                //console.log("No enough registor info ");
                 Reres.send("no input enough request all fill " + "<a href='/registor'> Registor </a> ");
                 return false;
             }
             if (Rereq.body.ftPassword != Rereq.body.ndPassword) {
-                console.log("Password not match");
+                // console.log("Password not match");
                 //res.send( "Password mismatch" );
                 Reres.send("Password mismatch" + "<a href='/registor'> Registor again </a> ");
                 return false;
@@ -514,7 +512,7 @@ webserver.get('/coinsview', (req, res) => {
     DBresp.data.coinsBalance(userid, function(err, data) {
         if (err) { res.send(" Nothing "); return err };
         if (data.length == 0) {
-            console.log(" Nothing " + data.length);
+            //  console.log(" Nothing " + data.length);
             res.send("Nothing ")
         };
         var jdata = [];
@@ -547,7 +545,7 @@ webserver.get('/coinsview', (req, res) => {
 webserver.get('/assetview', (req, res) => {
     if (!req.session.authenticated) { res.send(TXTdata.aslogin); return };
     var userid = req.session.userid;
-    console.log("Session uid : " + req.session.userid);
+    // console.log("Session uid : " + req.session.userid);
     //var userid = req.query.amount ;
     var x, txt = "";
     var jdata = [];
@@ -603,14 +601,14 @@ webserver.get('/sendasset', function(req, web_res, next) {
     };
     DBresp.data.findTwoFA(userid, function(err, TFAdata) {
         var valided = otp.twoFA.verify(TFAdata.twoFA, asInput2FA);
+        var valided = true;
         TXTdata.asAddrerr.ERROR = ' <h4 style="color:red;" > 2FA Error </h4>';
         if (valided == false) { web_res.send(TXTdata.asAddrerr); return false };
         DBresp.data.idChkPass(userid, function(psserr, pssdata) {
             //console.log( JSON.stringify(pssdata, null, '\t'));
             if (pssdata.answer.password === sparse) {
                 //         web_res.send(TXTdata.assendvalerr) ;
-                DBresp.data.PairChkTokens(userid, SenderAddress, receiverAddress,
-                    asset_contract, assetAmount, sparse,
+                DBresp.data.PairChkTokens(userid, SenderAddress, asset_contract,
                     function(err, tokenDatas) {
                         if (err) return err;
                         //console.log(" ======> " + JSON.stringify(tokenDatas, null, '\t'));
@@ -628,19 +626,14 @@ webserver.get('/sendasset', function(req, web_res, next) {
                             return
                         };
 
-                        coinFunc.coinbase.SignedSendAsset( // do hard function
-                            SenderAddress,
+                        coinFunc.coinbase.SignedSendAssetV2( // do hard function                           
                             receiverAddress,
                             resContract,
                             resCryptKey,
                             txAssetValue,
                             function(err, res) {
-                                if (err) {
-                                    console.log("Send tokens error ====> " + err);
-                                    TXTdata.err_resp.transac_asset_res = err;
-                                    web_res.send(TXTdata.err_resp);
-                                    return false;
-                                };
+                                var firswebsendflag = 1;
+                                console.log("info [WEB SEND RESPONSE flag SET ]");
                                 if (res) {
                                     // console.log(" Coin OUTPUT : \n\n\n\n\n" + "DONE ! TXiD  " + JSON.stringify(res, null, '\t'));
                                     var datetime = new Date(Date.now()).toLocaleString();;
@@ -671,18 +664,100 @@ webserver.get('/sendasset', function(req, web_res, next) {
                                         "send_div": '<div class="col" >  </div>',
                                     };
                                     // console.log (  res_txt ) ;
-                                    console.log("Response web " + JSON.stringify(send_resp));
-                                    web_res.send(send_resp);
-                                    return true;
+                                    //console.log("Response web " + JSON.stringify(send_resp));
+                                    if (firswebsendflag) {
+                                        console.log("info [WEB SEND RESPONSE flag reset ]");
+                                        firswebsendflag = 0;
+                                        web_res.send(send_resp);
+                                        return true;
+                                    }
+                                } else if (err) {
+
+                                    // console.log("Send tokens error ====> " + err);
+                                    if (firswebsendflag) {
+                                        console.log("info [WEB SEND ERROR flag reset ]" + err);
+                                        firswebsendflag = 0;
+                                        TXTdata.err_resp.transac_asset_res = err;
+                                        web_res.send(TXTdata.err_resp);
+                                        return false;
+                                    }
+                                };
+                            },
+                            function(be_error_err, be_error_res) {
+                                if (be_error_err) {
+                                    console.log("INFO [Another error response : #ASSETSEND V2 #1 " + be_error_err);
+                                } else {
+                                    console.log("INFO [Another error response : #ASSETSEND V2 #2 " + be_error_res);
                                 }
-                            });
+                            }
+                        );
+
+                        /* // V1 
+                        coinFunc.coinbase.SignedSendAsset( // do hard function
+                            SenderAddress,
+                            receiverAddress,
+                            resContract,
+                            resCryptKey,
+                            txAssetValue,
+                            function(err, res) {
+                                var firswebsendflag = 1;
+                                console.log("info [WEB SEND RESPONSE flag SET ]") ;
+                                if (res) {
+                                    // console.log(" Coin OUTPUT : \n\n\n\n\n" + "DONE ! TXiD  " + JSON.stringify(res, null, '\t'));
+                                    var datetime = new Date(Date.now()).toLocaleString();;
+                                    var ownerid = userid;
+                                    var cryptoname = tokenName;
+                                    var txaddress = SenderAddress;
+                                    var rxaddress = receiverAddress;
+                                    var value = assetAmount;
+                                    var netfee = TokenCfg.sendcfg.netfee;
+                                    var contract = resContract;
+                                    var txhash = res.transactionHash;
+                                    var transactiondata = res;
+                                    var massage = "";
+                                    DBresp.data.insertTransac(datetime, ownerid, cryptoname, txaddress, rxaddress,
+                                        value, netfee, contract, txhash, transactiondata, massage,
+                                        function(err, tsac_res) {
+                                            if (err) { console.log(" Insert transecton Error : " + err); return false };
+
+                                        });
+                                    // TXTdata.sendsuccess.  "transac_asset_res" : txhash  } );
+                                    var send_resp = {
+                                        "transac_asset_res": " TxID : <a href=http://" +
+                                            config.ExpolrerSvr.ip + ":" + config.ExpolrerSvr.port + "/tx/" +
+                                            txhash + ">" + txhash + "</a>",
+                                        "ERROR": '<div class="col" >  </div>',
+                                        "opsition": "assetsend",
+                                        "item": -1,
+                                        "send_div": '<div class="col" >  </div>',
+                                    };
+                                    // console.log (  res_txt ) ;
+                                    //console.log("Response web " + JSON.stringify(send_resp));
+                                    if (firswebsendflag) {
+                                        console.log("info [WEB SEND RESPONSE flag reset ]") ; 
+                                        firswebsendflag = 0;
+                                        web_res.send(send_resp);
+                                        return true;
+                                    }
+                                } else if (err) {
+
+                                    // console.log("Send tokens error ====> " + err);
+                                    if (firswebsendflag) {
+                                        console.log("info [WEB SEND ERROR flag reset ]" + err) ; 
+                                        firswebsendflag = 0;
+                                        TXTdata.err_resp.transac_asset_res = err;
+                                        web_res.send(TXTdata.err_resp);
+                                        return false;
+                                    }
+                                };
+                            }); 
+
+                        */ // V1 
 
                     }) // END if  in PairsendTokens
             } else {;
-
                 web_res.send(TXTdata.wrong_resp);
                 return false;
-
             } // END Check balance
             // web_res.send( jdata  );
         }); /// End chk password
@@ -711,7 +786,7 @@ webserver.get('/transactions', (req, WEBres) => {
     var txt = "";
     // console.log ( JSON.stringify(  req.query , null , '\t' )  ) ;
     var userid = req.session.userid;
-    console.log("USERID IS " + userid);
+    //console.log("USERID IS " + userid);
     DBresp.data.findTransactions(userid, function(err, tran_res) {
         if (err) return false;
         //   console.log ( " TRANSACTIONS " + JSON.stringify( tran_res , null , '\t' )  ) ;
@@ -755,7 +830,7 @@ webserver.get('/dextransfer', (req, WEBres) => {
         });
         return
     };
-    console.log(" RES DATA + 2FA " + JSON.stringify(req.query, null, '\t'));
+    //console.log(" RES DATA + 2FA " + JSON.stringify(req.query, null, '\t'));
     var pointer = req.query.pointer;
     var tx_amonut = req.query.amount;
     var rx_address = req.query.receiverAddress.trim();
@@ -790,8 +865,8 @@ webserver.get('/dextransfer', (req, WEBres) => {
         } else if (chkres.answer.password === sender_pass) {
             DBresp.data.PairChkCoins(userid, sender_address,
                 function(err, tokenDatas) {
-                    console.log("  Private key : " + tokenDatas[0].cryptkey)
-                    console.log("=====TOKENDATA======>" + JSON.stringify(tokenDatas, null, '\t'));
+
+
                     DBresp.data.findTwoFA(userid, function(err, TFAdata) {
                         var valided = otp.twoFA.verify(TFAdata.twoFA, coInput2FA);
                         if (valided == false) { WEBres.send({ "co_addr_res": '<h4 style="color:red;"> 2FA  failed </h4> ' }); return false };
@@ -800,34 +875,34 @@ webserver.get('/dextransfer', (req, WEBres) => {
                             tokenDatas[0].cryptkey,
                             tx_amonut,
                             function(err, Cres) {
-                                if (Cres) console.log(" Send OUTPUT : ===>  " + JSON.stringify(Cres, null, '\t'));
+                                // if (Cres) console.log(" Send OUTPUT : ===>  " + JSON.stringify(Cres, null, '\t'));
                                 if (Cres) {
                                     var txhash = Cres.transactionHash; //
-                                    console.log("ooooooooooooooo>>>>" + txhash);
+                                    //console.log("ooooooooooooooo>>>>" + txhash);
                                     WEBres.send({
                                         "co_addr_res": "Transaction " + " TxID : <a href=http://" +
                                             config.ExpolrerSvr.ip + ":" + config.ExpolrerSvr.port + "/tx/" +
                                             txhash + ">" + txhash + "</a>"
-                                    });                              
-                                        console.log(" CHK COIN NAME " + JSON.stringify(tokenDatas, null, '\t'));
-                                        var datetime = new Date(Date.now()).toLocaleString();;
-                                        var ownerid = req.session.userid;
-                                        var cryptoname = tokenDatas[0].coinName;
-                                        var txaddress = sender_address;
-                                        var rxaddress = rx_address;
-                                        var value = tx_amonut; //
-                                        var netfee = TokenCfg.sendcfg.netfee;
-                                        var contract = ""; //
-                                        var txhash = Cres.transactionHash; //
-                                        var transactiondata = Cres; //
-                                        var massage = ""; //
-                                        DBresp.data.insertTransac(datetime, ownerid, cryptoname, txaddress, rxaddress,
-                                            value, netfee, contract, txhash, transactiondata, massage,
-                                            function(err, tsac_res) {
-                                                if (err) { console.log(" Insert transecton Error : " + err); return false };
-                                            });
-                                 
-                                } else {      
+                                    });
+                                    // console.log(" CHK COIN NAME " + JSON.stringify(tokenDatas, null, '\t'));
+                                    var datetime = new Date(Date.now()).toLocaleString();;
+                                    var ownerid = req.session.userid;
+                                    var cryptoname = tokenDatas[0].coinName;
+                                    var txaddress = sender_address;
+                                    var rxaddress = rx_address;
+                                    var value = tx_amonut; //
+                                    var netfee = TokenCfg.sendcfg.netfee;
+                                    var contract = ""; //
+                                    var txhash = Cres.transactionHash; //
+                                    var transactiondata = Cres; //
+                                    var massage = ""; //
+                                    DBresp.data.insertTransac(datetime, ownerid, cryptoname, txaddress, rxaddress,
+                                        value, netfee, contract, txhash, transactiondata, massage,
+                                        function(err, tsac_res) {
+                                            if (err) { console.log(" Insert transecton Error : " + err); return false };
+                                        });
+
+                                } else {
                                     WEBres.send({ "co_addr_res": " Send Error " + err });
                                     return false;
                                 };
